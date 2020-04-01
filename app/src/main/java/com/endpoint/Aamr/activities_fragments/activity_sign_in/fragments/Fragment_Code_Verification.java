@@ -111,13 +111,13 @@ public class Fragment_Code_Verification extends Fragment {
 
         startCounter();
 
-        authn();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                sendverficationcode(phone_number, phone_code.replace("00", "+"));
-            }
-        }, 3);
+        //authn();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                sendverficationcode(phone_number, phone_code.replace("00", "+"));
+//            }
+//        }, 3);
 
     }
 
@@ -180,12 +180,14 @@ public class Fragment_Code_Verification extends Fragment {
 
     private void checkData() {
         String code = edt_code.getText().toString().trim();
-        if (!TextUtils.isEmpty(code)) {
-            Common.CloseKeyBoard(activity, edt_code);
-            verfiycode(code);
-        } else {
-            edt_code.setError(getString(R.string.field_req));
-        }
+//        if (!TextUtils.isEmpty(code)) {
+//            Common.CloseKeyBoard(activity, edt_code);
+//            verfiycode(code);
+//        } else {
+//            edt_code.setError(getString(R.string.field_req));
+//        }
+        activity.signIn(phone_number, country_code, phone_code);
+
     }
 
     private void ValidateCode(String code) {

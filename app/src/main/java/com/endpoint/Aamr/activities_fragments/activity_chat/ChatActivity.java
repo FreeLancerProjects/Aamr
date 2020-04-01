@@ -3,12 +3,15 @@ package com.endpoint.Aamr.activities_fragments.activity_chat;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -20,17 +23,20 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -61,23 +67,28 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private TextView tv_name,tv_order_num;
+    private TextView tv_name,tv_order_num,recordDuration;
     private CircleImageView image,image_chat_user;
-    private ImageView image_send,image_back,image_upload_image;
+    private ImageView image_send,image_back,image_upload_image,imageMic,imageDelete,imagePlay;
+    private Handler handler;
+    private Runnable runnable;
     private EditText edt_msg_content;
     private ConstraintLayout cons_typing;
     private LinearLayout ll_back,ll_bill;
@@ -96,14 +107,21 @@ public class ChatActivity extends AppCompatActivity {
     private boolean canSendTyping = true;
     private boolean from = true;
     private MediaPlayer mp;
+    private final String audio_perm = Manifest.permission.RECORD_AUDIO;
+    private final int write_req = 100;
 
+    private boolean isPermissionGranted = false;
+    private MediaPlayer mediaPlayer;
     private final String read_permission = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private final String camera_permission = Manifest.permission.CAMERA;
     private final int IMG1 = 1,IMG2=2;
     private Uri imgUri = null;
     private int which_image_upload_selected = 0;
-
+    private MediaRecorder recorder;
+    private String path;
+private SeekBar seekBar;
+private CardView cardView;
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(Language_Helper.updateResources(base,Language_Helper.getLanguage(base)));
@@ -115,6 +133,8 @@ public class ChatActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_chat);
         initView();
+        checkWritePermission();
+
         getDataFromIntent();
     }
 
@@ -148,6 +168,13 @@ public class ChatActivity extends AppCompatActivity {
         userModel = userSingleTone.getUserModel();
 
         image_back = findViewById(R.id.image_back);
+        imageMic=findViewById(R.id.imageMic);
+        imagePlay=findViewById(R.id.imagePlay);
+        imageDelete=findViewById(R.id.imageDelete);
+        recordDuration=findViewById(R.id.recordDuration);
+        cardView=findViewById(R.id.cardView);
+
+        seekBar=findViewById(R.id.seekBar);
         if (current_language.equals("ar")) {
             image_back.setImageResource(R.drawable.ic_right_arrow);
         } else {
@@ -207,6 +234,27 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if (mediaPlayer != null && b) {
+
+                    mediaPlayer.seekTo(i);
+
+
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
 
         ll_back.setOnClickListener(new View.OnClickListener() {
@@ -240,7 +288,80 @@ public class ChatActivity extends AppCompatActivity {
                 CreateImageAlertDialog();
             }
         });
+        imagePlay.setOnClickListener(view -> {
 
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                recordDuration.setText(getDuration(mediaPlayer.getCurrentPosition()));
+                mediaPlayer.pause();
+                imagePlay.setImageResource(R.drawable.ic_play);
+
+            } else {
+
+                if (mediaPlayer != null) {
+                    imagePlay.setImageResource(R.drawable.ic_pause);
+
+                    mediaPlayer.start();
+                    updateProgress();
+
+
+                }
+            }
+
+        });
+        imageDelete.setOnClickListener(view -> {
+            cardView.setVisibility(View.GONE);
+            deleteFile();
+           // model.setAudio_name("");
+          //  model.setSound_path("");
+          //  binding.setModel(model);
+            if (mediaPlayer!=null)
+            {
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
+
+            if (handler != null && runnable != null) {
+                handler.removeCallbacks(runnable);
+                runnable = null;
+            }
+        });
+        imageMic.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (isPermissionGranted) {
+                        if (recorder != null) {
+                            recorder.release();
+                            recorder = null;
+
+                        }
+                        initRecorder();
+                    } else {
+                        Toast.makeText(ChatActivity.this, "Cannot access mic", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if (isPermissionGranted) {
+
+                        try {
+                            recorder.stop();
+                            //  Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
+                            mediaPlayer = null;
+                            initAudio();
+
+                        } catch (Exception e) {
+                            // binding.imageWave.setVisibility(View.GONE);
+                        }
+
+
+                    } else {
+                        Toast.makeText(ChatActivity.this, "Cannot access mic", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+                return true;
+            }
+        });
 
         image_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,6 +373,11 @@ public class ChatActivity extends AppCompatActivity {
                     canSendTyping = true;
                     updateTyingState(Tags.END_TYPING);
                     SendMessage(msg,Tags.MESSAGE_TEXT);
+                }
+                else {
+                    if(path!=null){
+                        sendmeassgeWithSound();
+                    }
                 }
             }
         });
@@ -290,7 +416,163 @@ public class ChatActivity extends AppCompatActivity {
 
 
     }
+    private void deleteFile() {
+        File file = new File(path);
+        if (file.exists())
+        {
+            file.delete();
+        }
+    }
+    private String getDuration(long duration) {
 
+        String total_duration = "00:00";
+
+        if (mediaPlayer != null) {
+            total_duration = String.format(Locale.ENGLISH, "%02d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(duration),
+                    TimeUnit.MILLISECONDS.toSeconds(duration) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
+            );
+
+
+        }
+
+        return total_duration;
+
+    }
+    private void sendmeassgeWithSound()
+    {
+        ProgressDialog dialog = Common.createProgressDialog(this, getString(R.string.wait));
+        dialog.setCancelable(false);
+        dialog.show();
+
+        RequestBody room_part = Common.getRequestBodyText(chatUserModel.getRoom_id());
+        RequestBody from_user_id_part = Common.getRequestBodyText(userModel.getData().getUser_id());
+        RequestBody to_user_id_part = Common.getRequestBodyText(chatUserModel.getId());
+
+        RequestBody user_msg_part = Common.getRequestBodyText("0");
+        RequestBody user_msg_type_part = Common.getRequestBodyText("3");
+        MultipartBody.Part sound_file_part = Common.getMultiPartSound(path, "file");
+
+        Api.getService(Tags.base_url)
+                .sendMessageWithImage(room_part,from_user_id_part,to_user_id_part,user_msg_part,user_msg_type_part,sound_file_part)
+                .enqueue(new Callback<MessageModel>() {
+                    @Override
+                    public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
+                        dialog.dismiss();
+                        Log.e("datttaa",response.body()+"_");
+                        progBar.setVisibility(View.GONE);
+                        if (response.isSuccessful())
+                        {
+                            if (adapter==null)
+                            {
+                                messageModelList.add(response.body());
+                                adapter = new ChatAdapter(messageModelList,userModel.getData().getUser_id(),chatUserModel.getImage(),ChatActivity.this);
+                                recView.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        recView.scrollToPosition(messageModelList.size()-1);
+deleteFile();
+
+                                    }
+                                },100);
+                            }else
+                            {
+                                messageModelList.add(response.body());
+                                adapter.notifyItemInserted(messageModelList.size()-1);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        recView.scrollToPosition(messageModelList.size()-1);
+
+                                    }
+                                },100);
+                            }
+
+                        }else
+                        {
+
+                            try {
+                                Log.e("Error_code",response.code()+"_"+response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MessageModel> call, Throwable t) {
+                        try {
+                            dialog.dismiss();
+                            Log.e("Error",t.getMessage());
+                        }catch (Exception e){}
+                    }
+                });
+    }
+    private void checkWritePermission() {
+
+        if (ContextCompat.checkSelfPermission(this, audio_perm) != PackageManager.PERMISSION_GRANTED) {
+
+
+            isPermissionGranted = false;
+
+            ActivityCompat.requestPermissions(this, new String[]{write_permission, audio_perm}, write_req);
+
+
+        } else {
+            isPermissionGranted = true;
+        }
+    }
+
+    private void initAudio() {
+        try {
+
+
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setVolume(100.0f, 100.0f);
+            mediaPlayer.setLooping(false);
+            mediaPlayer.prepare();
+            recordDuration.setText(getDuration(mediaPlayer.getDuration()));
+
+            mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+              cardView.setVisibility(View.VISIBLE);
+                seekBar.setMax(mediaPlayer.getDuration());
+              imagePlay.setImageResource(R.drawable.ic_play);
+            });
+
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                recordDuration.setText(getDuration(mediaPlayer.getDuration()));
+               imagePlay.setImageResource(R.drawable.ic_play);
+                seekBar.setProgress(0);
+                handler.removeCallbacks(runnable);
+
+            });
+
+        } catch (IOException e) {
+            Log.e("eeeex", e.getMessage());
+            mediaPlayer.release();
+            mediaPlayer = null;
+            if (handler != null && runnable != null) {
+                handler.removeCallbacks(runnable);
+            }
+cardView.setVisibility(View.GONE);
+
+        }
+    }
+    private void updateProgress() {
+        seekBar.setProgress(mediaPlayer.getCurrentPosition());
+       recordDuration.setText(getDuration(mediaPlayer.getCurrentPosition()));
+        handler = new Handler();
+        runnable = this::updateProgress;
+        handler.postDelayed(runnable, 1000);
+
+
+    }
     ///////////////////////////////////////////////
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void ListenToTyping(TypingModel typingModel)
@@ -311,6 +593,49 @@ public class ChatActivity extends AppCompatActivity {
                 mp.release();
             }
         }
+    }
+    private void initRecorder()
+    {
+
+        Calendar calendar = Calendar.getInstance();
+        isPermissionGranted = true;
+        String audioName = "AUD" + calendar.getTimeInMillis()+ ".mp3";
+
+        File folder_done = new File(Tags.local_folder_path);
+
+        if (!folder_done.exists()) {
+            folder_done.mkdir();
+        }
+
+        path = folder_done.getAbsolutePath() + "/" + audioName;
+
+
+        recorder = new MediaRecorder();
+
+
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        recorder.setAudioChannels(1);
+        recorder.setOutputFile(path);
+        try {
+            recorder.prepare();
+            recorder.start();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Failed", "Failed");
+
+
+            if (mediaPlayer != null) {
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
+
+
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -474,6 +799,7 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
                         progBar.setVisibility(View.GONE);
+                        Log.e("llll",response.code()+""+chatUserModel.getRoom_id());
                         if (response.isSuccessful())
                         {
                             if (adapter==null)
@@ -737,6 +1063,9 @@ public class ChatActivity extends AppCompatActivity {
                     Toast.makeText(this, getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+       else if (requestCode == write_req && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            isPermissionGranted = true;
         }
     }
 

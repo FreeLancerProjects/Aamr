@@ -51,7 +51,17 @@ public class Common {
 
 
     }
+    public static MultipartBody.Part getMultiPartSound(String path, String partName) {
+        File file = getFileFromImagePath(path);
+        RequestBody requestBody = getRequestBodySound(file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData(partName, file.getName(), requestBody);
+        return part;
 
+    }
+    public static RequestBody getRequestBodySound(File file) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+        return requestBody;
+    }
     public static void CreateUserNotSignInAlertDialog(final Context context)
     {
 

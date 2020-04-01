@@ -2,13 +2,17 @@ package com.endpoint.Aamr.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,7 +39,8 @@ public class ChatAdapter extends RecyclerView.Adapter {
     private final int ITEM_MESSAGE_RIGHT = 2;
     private final int ITEM_MESSAGE_IMAGE_LEFT = 3;
     private final int ITEM_MESSAGE_IMAGE_RIGHT = 4;
-
+    private final int ITEM_MESSAGE_ٍSound_LEFT = 5;
+    private final int ITEM_MESSAGE_Sound_RIGHT = 6;
     private List<MessageModel> messageModelList;
     private String current_user_id;
     private String chat_user_image;
@@ -66,7 +71,20 @@ public class ChatAdapter extends RecyclerView.Adapter {
             View view = LayoutInflater.from(context).inflate(R.layout.chat_message_image_left_row, parent, false);
             return new ImageLeftHolder(view);
 
-        }else
+        }
+        else if (viewType == ITEM_MESSAGE_ٍSound_LEFT){
+
+            View view = LayoutInflater.from(context).inflate(R.layout.chat_message_audio_left_row, parent, false);
+            return new SoundLeftHolder(view);
+
+        }
+        else if (viewType == ITEM_MESSAGE_Sound_RIGHT){
+
+            View view = LayoutInflater.from(context).inflate(R.layout.chat_message_audio_right_row, parent, false);
+            return new SoundRightHolder(view);
+
+        }
+        else
             {
                 View view = LayoutInflater.from(context).inflate(R.layout.chat_message_image_right_row, parent, false);
                 return new ImageRightHolder(view);
@@ -109,7 +127,58 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
             imageRightHolder.BindData(messageModel);
         }
+        else if (holder instanceof SoundRightHolder) {
+            Log.e("3","3");
 
+            SoundRightHolder imageLeftHolder = (SoundRightHolder) holder;
+            MessageModel messageModel = messageModelList.get(imageLeftHolder.getAdapterPosition());
+            imageLeftHolder.imagePlay.setOnClickListener(view -> {
+
+                if (imageLeftHolder.mediaPlayer != null && imageLeftHolder.mediaPlayer.isPlaying()) {
+                    imageLeftHolder.mediaPlayer.pause();
+                    imageLeftHolder.imagePlay.setImageResource(R.drawable.ic_play);
+
+                } else {
+
+                    if (imageLeftHolder.mediaPlayer != null) {
+                        imageLeftHolder. imagePlay.setImageResource(R.drawable.ic_pause);
+
+                        imageLeftHolder.mediaPlayer.start();
+                        imageLeftHolder.updateProgress();
+
+
+                    }
+                }
+
+            });
+            imageLeftHolder.BindData(messageModel);
+
+        }
+        else if (holder instanceof SoundLeftHolder) {
+            Log.e("4","4");
+            SoundLeftHolder imageRightHolder = (SoundLeftHolder) holder;
+            MessageModel messageModel = messageModelList.get(imageRightHolder.getAdapterPosition());
+            imageRightHolder.imagePlay.setOnClickListener(view -> {
+
+                if (imageRightHolder.mediaPlayer != null && imageRightHolder.mediaPlayer.isPlaying()) {
+                    imageRightHolder.mediaPlayer.pause();
+                    imageRightHolder.imagePlay.setImageResource(R.drawable.ic_play);
+
+                } else {
+
+                    if (imageRightHolder.mediaPlayer != null) {
+                        imageRightHolder. imagePlay.setImageResource(R.drawable.ic_pause);
+
+                        imageRightHolder.mediaPlayer.start();
+                        imageRightHolder.updateProgress();
+
+
+                    }
+                }
+
+            });
+            imageRightHolder.BindData(messageModel);
+        }
     }
 
     @Override
@@ -312,7 +381,157 @@ public class ChatAdapter extends RecyclerView.Adapter {
         }
 
     }
+    public class SoundRightHolder extends RecyclerView.ViewHolder
+    {
+        private TextView recordDuration,tv_time;
+        private ImageView imagePlay;
+        private SeekBar seekBar;
+        private MediaPlayer mediaPlayer;
+        private Handler handler;
+        private Runnable runnable;
+        public SoundRightHolder(View itemView) {
+            super(itemView);
+            imagePlay=itemView.findViewById(R.id.imagePlay);
+            recordDuration=itemView.findViewById(R.id.recordDuration);
+            tv_time = itemView.findViewById(R.id.tv_time);
 
+            seekBar=itemView.findViewById(R.id.seekBar);
+
+        }
+        private void initAudio(MessageModel messageModel) {
+            try {
+
+
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setDataSource(Tags.IMAGE_URL+messageModel.getFile());
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setVolume(100.0f, 100.0f);
+                mediaPlayer.setLooping(false);
+                mediaPlayer.prepare();
+
+                mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+                    seekBar.setMax(mediaPlayer.getDuration());
+                    imagePlay.setImageResource(R.drawable.ic_play);
+                });
+
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    imagePlay.setImageResource(R.drawable.ic_play);
+                    seekBar.setProgress(0);
+                    handler.removeCallbacks(runnable);
+
+                });
+
+            } catch (IOException e) {
+                Log.e("eeeex", e.getMessage());
+                mediaPlayer.release();
+                mediaPlayer = null;
+                if (handler != null && runnable != null) {
+                    handler.removeCallbacks(runnable);
+                }
+
+            }
+        }
+        private void updateProgress() {
+            seekBar.setProgress(mediaPlayer.getCurrentPosition());
+            handler = new Handler();
+            runnable = this::updateProgress;
+            handler.postDelayed(runnable, 1000);
+
+
+        }
+        public void BindData(final MessageModel messageModel) {
+
+
+
+            Paper.init(context);
+            String lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa", new Locale(lang));
+            String msg_time = dateFormat.format(new Date(Long.parseLong(messageModel.getDate()) * 1000));
+            tv_time.setText(msg_time);
+initAudio(messageModel);
+
+
+
+        }
+
+
+    }
+    public class SoundLeftHolder extends RecyclerView.ViewHolder {
+        private CircleImageView image;
+        private TextView recordDuration,tv_time;
+        private ImageView imagePlay;
+        private SeekBar seekBar;
+        private MediaPlayer mediaPlayer;
+        private Handler handler;
+        private Runnable runnable;
+        public SoundLeftHolder(View itemView) {
+            super(itemView);
+
+            image = itemView.findViewById(R.id.image);
+            imagePlay=itemView.findViewById(R.id.imagePlay);
+            recordDuration=itemView.findViewById(R.id.recordDuration);
+            tv_time = itemView.findViewById(R.id.tv_time);
+
+            seekBar=itemView.findViewById(R.id.seekBar);
+        }
+        private void initAudio(MessageModel messageModel) {
+            try {
+
+
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setDataSource(Tags.IMAGE_URL+messageModel.getFile());
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setVolume(100.0f, 100.0f);
+                mediaPlayer.setLooping(false);
+                mediaPlayer.prepare();
+
+                mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+                    seekBar.setMax(mediaPlayer.getDuration());
+                    imagePlay.setImageResource(R.drawable.ic_play);
+                });
+
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    imagePlay.setImageResource(R.drawable.ic_play);
+                    seekBar.setProgress(0);
+                    handler.removeCallbacks(runnable);
+
+                });
+
+            } catch (IOException e) {
+                Log.e("eeeex", e.getMessage());
+                mediaPlayer.release();
+                mediaPlayer = null;
+                if (handler != null && runnable != null) {
+                    handler.removeCallbacks(runnable);
+                }
+
+            }
+        }
+        private void updateProgress() {
+            seekBar.setProgress(mediaPlayer.getCurrentPosition());
+            handler = new Handler();
+            runnable = this::updateProgress;
+            handler.postDelayed(runnable, 1000);
+
+
+        }
+
+        public void BindData(final MessageModel messageModel) {
+
+
+            Paper.init(context);
+            String lang = Paper.book().read("lang", Locale.getDefault().getLanguage());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa", new Locale(lang));
+            String msg_time = dateFormat.format(new Date(Long.parseLong(messageModel.getDate()) * 1000));
+            tv_time.setText(msg_time);
+initAudio(messageModel);
+            //Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL+messageModel.getFile())).resizeDimen(R.dimen.chat_image_width,R.dimen.chat_image_height).into(image_bill);
+
+        }
+
+
+
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -325,7 +544,16 @@ public class ChatAdapter extends RecyclerView.Adapter {
             } else {
                 return ITEM_MESSAGE_RIGHT;
             }
-        }else
+        }
+       else if (messageModel.getMessage_type().equals("3"))
+        {
+            if (messageModel.getTo_user().equals(current_user_id)) {
+                return ITEM_MESSAGE_ٍSound_LEFT;
+            } else {
+                return ITEM_MESSAGE_Sound_RIGHT;
+            }
+        }
+        else
             {
                 if (messageModel.getTo_user().equals(current_user_id)) {
                     return ITEM_MESSAGE_IMAGE_LEFT;

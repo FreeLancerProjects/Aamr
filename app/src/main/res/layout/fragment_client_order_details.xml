@@ -241,7 +241,6 @@
                 tools:ignore="RtlCompat"
                 android:src="@drawable/ic_chat"
                 android:padding="10dp"
-                android:visibility="gone"
                 android:tint="@color/white"
                 />
 

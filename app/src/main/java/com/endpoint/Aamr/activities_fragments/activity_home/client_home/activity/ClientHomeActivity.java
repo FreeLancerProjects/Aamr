@@ -180,11 +180,11 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_home);
 
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
-            // Log.e("user", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhoneNumber());
-            FirebaseAuth.getInstance().getCurrentUser().delete();
-            FirebaseAuth.getInstance().signOut();
-        }
+//        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+//            // Log.e("user", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhoneNumber());
+//            FirebaseAuth.getInstance().getCurrentUser().delete();
+//            FirebaseAuth.getInstance().signOut();
+//        }
         initView();
 
         if (savedInstanceState == null) {
@@ -397,36 +397,36 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     }
     private void updateToken()
     {
-        FirebaseInstanceId.getInstance()
-                .getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (task.isSuccessful())
-                        {
-                            token = task.getResult().getToken();
-                            Api.getService(Tags.base_url)
-                                    .updateToken(userModel.getData().getUser_id(),token,2)
-                                    .enqueue(new Callback<ResponseBody>() {
-                                        @Override
-                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                                            if (response.isSuccessful())
-                                            {
-                                                Log.e("Success","token updated");
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                            try {
-                                                Log.e("Error",t.getMessage());
-                                            }catch (Exception e){}
-                                        }
-                                    });
-                        }
-                    }
-                });
+//        FirebaseInstanceId.getInstance()
+//                .getInstanceId()
+//                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                        if (task.isSuccessful())
+//                        {
+//                            token = task.getResult().getToken();
+//                            Api.getService(Tags.base_url)
+//                                    .updateToken(userModel.getData().getUser_id(),token,2)
+//                                    .enqueue(new Callback<ResponseBody>() {
+//                                        @Override
+//                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//
+//                                            if (response.isSuccessful())
+//                                            {
+//                                                Log.e("Success","token updated");
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                                            try {
+//                                                Log.e("Error",t.getMessage());
+//                                            }catch (Exception e){}
+//                                        }
+//                                    });
+//                        }
+//                    }
+//                });
     }
 
     private void initGoogleApiClient()
