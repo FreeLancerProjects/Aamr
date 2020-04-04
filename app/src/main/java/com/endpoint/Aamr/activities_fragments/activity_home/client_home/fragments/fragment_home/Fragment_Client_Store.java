@@ -37,6 +37,8 @@ import com.endpoint.Aamr.models.PhotosModel;
 import com.endpoint.Aamr.models.PlaceModel;
 import com.endpoint.Aamr.models.QuerySearchModel;
 import com.endpoint.Aamr.models.SliderModel;
+import com.endpoint.Aamr.models.UserModel;
+import com.endpoint.Aamr.preferences.Preferences;
 import com.endpoint.Aamr.remote.Api;
 import com.endpoint.Aamr.tags.Tags;
 import com.google.android.material.tabs.TabLayout;
@@ -74,11 +76,11 @@ public class Fragment_Client_Store extends Fragment {
     private TimerTask timerTask;
     private SliderAdapter sliderAdapter;
     private String current_language;
-private List<CategoryModel.Data>categoryModels;
+    private List<CategoryModel.Data>categoryModels;
     private int current_page = 1;
     private boolean isLoading = false;
-
-
+    private Preferences preferences;
+    private UserModel userModel;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -97,7 +99,8 @@ private List<CategoryModel.Data>categoryModels;
     private void initView(View view) {
 
         activity = (ClientHomeActivity) getActivity();
-
+        preferences= Preferences.getInstance();
+        userModel=preferences.getUserData(activity);
         Paper.init(activity);
         current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
         nearbyModelList = new ArrayList<>();
@@ -158,8 +161,8 @@ private List<CategoryModel.Data>categoryModels;
         recViewQueries.setLayoutManager(managerQueries);
         queryAdapter = new QueryAdapter(en_ar_queriesList,activity,this);
         recViewQueries.setAdapter(queryAdapter);
-categoryAdapter=new CategoryAdapter(categoryModels,activity,this);
-recviewcat.setAdapter(categoryAdapter);
+        categoryAdapter=new CategoryAdapter(categoryModels,activity,this);
+        recviewcat.setAdapter(categoryAdapter);
         ll_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,36 +197,36 @@ recviewcat.setAdapter(categoryAdapter);
 //        }
 //    });
         getCatogries();
-}
+    }
 
     public void getCatogries() {
         //   Common.CloseKeyBoard(homeActivity, edt_name);
 
         // rec_sent.setVisibility(View.GONE);
-       // progBar.setVisibility(View.VISIBLE);
+        // progBar.setVisibility(View.VISIBLE);
         Api.getService(Tags.base_url)
                 .getcatogries(current_language)
                 .enqueue(new Callback<CategoryModel>() {
                     @Override
                     public void onResponse(Call<CategoryModel>  call, Response<CategoryModel> response) {
-                      //  progBar.setVisibility(View.GONE);
+                        //  progBar.setVisibility(View.GONE);
                         if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                             categoryModels.clear();
                             categoryModels.addAll(response.body().getData());
-                       //     Log.e("lllll",response.body().getData().size()+"");
+                            //     Log.e("lllll",response.body().getData().size()+"");
                             if (response.body().getData().size() > 0) {
                                 // rec_sent.setVisibility(View.VISIBLE);
 
-                             //   ll_no_store.setVisibility(View.GONE);
+                                //   ll_no_store.setVisibility(View.GONE);
                                 categoryAdapter.notifyDataSetChanged();
                                 //   total_page = response.body().getMeta().getLast_page();
 
                             } else {
-                               // ll_no_store.setVisibility(View.VISIBLE);
+                                // ll_no_store.setVisibility(View.VISIBLE);
 
                             }
                         } else {
-                           // ll_no_store.setVisibility(View.VISIBLE);
+                            // ll_no_store.setVisibility(View.VISIBLE);
 
                             //  Toast.makeText(activity, getString(R.string.failed), Toast.LENGTH_SHORT).show();
                             try {
@@ -238,7 +241,7 @@ recviewcat.setAdapter(categoryAdapter);
                     public void onFailure(Call<CategoryModel> call, Throwable t) {
                         try {
 
-                          //  progBar.setVisibility(View.GONE);
+                            //  progBar.setVisibility(View.GONE);
                             //    Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
                             Log.e("error", t.getMessage());
                         } catch (Exception e) {
@@ -263,12 +266,12 @@ recviewcat.setAdapter(categoryAdapter);
                         }else
                         {
 
-                                try {
-                                    Log.e("error_code",response.code()+"_"+response.errorBody().string());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                pager.setVisibility(View.GONE);
+                            try {
+                                Log.e("error_code",response.code()+"_"+response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            pager.setVisibility(View.GONE);
                             try {
                                 Log.e("error_code",response.code()+"_"+response.errorBody().string());
                             } catch (IOException e) {
@@ -320,7 +323,7 @@ recviewcat.setAdapter(categoryAdapter);
 
         }else
 
-                pager.setVisibility(View.GONE);
+            pager.setVisibility(View.GONE);
         {
             pager.setVisibility(View.GONE);
 
@@ -354,7 +357,7 @@ recviewcat.setAdapter(categoryAdapter);
                     .enqueue(new Callback<NearbyStoreDataModel>() {
                         @Override
                         public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
-                        //    Log.e("jjjjjj",response.code()+"");
+                            //    Log.e("jjjjjj",response.code()+"");
 
                             if (response.isSuccessful()&&response.body()!=null)
                             {
@@ -540,7 +543,8 @@ recviewcat.setAdapter(categoryAdapter);
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==2){
-            activity.DisplayFragmentMyOrders();
-        }
+            if(userModel!=null){
+                activity.DisplayFragmentMyOrders();
+            }}
     }
 }

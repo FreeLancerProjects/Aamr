@@ -81,8 +81,8 @@ public class CategoryActivity extends AppCompatActivity {
     private String [] timesList;
     private SingleCategoryModel singlecategory;
     private EditText edt_order_details;
-private Preferences preference;
-private UserModel userModel;
+    private Preferences preference;
+    private UserModel userModel;
     private String order_details;
 
     @Override
@@ -139,8 +139,17 @@ private UserModel userModel;
         cons_add_coupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(CategoryActivity.this,Add_Coupon_Activity.class);
-                startActivityForResult(intent,2);
+                if(userModel!=null){
+                    if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE))
+                    {
+                        Common.CreateSignAlertDialog(CategoryActivity.this,getString(R.string.serv_aval_client));
+                    }
+                    else {
+                        Intent intent=new Intent(CategoryActivity.this,Add_Coupon_Activity.class);
+                        startActivityForResult(intent,2);}}
+                else {
+                    Common.CreateUserNotSignInAlertDialog(CategoryActivity.this);
+                }
             }
         });
 
@@ -178,34 +187,42 @@ private UserModel userModel;
         btnOrderNow.setOnClickListener(view -> {
 //            Intent intent = new Intent(CategoryActivity.this, CompleteOrderActivity.class);
 //            startActivity(intent);
-            CheckData();
+            if(userModel!=null){
+                if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE))
+                {
+                    Common.CreateSignAlertDialog(CategoryActivity.this,getString(R.string.serv_aval_client));
+                }
+                else {
+                    CheckData();}}
+            else {
+                Common.CreateUserNotSignInAlertDialog(CategoryActivity.this);
+            }
 
         });
 
     }
     private void CheckData() {
 
-    order_details = edt_order_details.getText().toString().trim();
+        order_details = edt_order_details.getText().toString().trim();
         if(!TextUtils.isEmpty(order_details)&&selectedLocation!=null&&!selectedLocation.getAddress().isEmpty()&&selected_time!=0)
 
-    {
-        edt_order_details.setError(null);
-        tv_time.setError(null);
-        tv_address.setError(null);
-        Common.CloseKeyBoard(this, edt_order_details);
+        {
+            edt_order_details.setError(null);
+            tv_time.setError(null);
+            tv_address.setError(null);
+            Common.CloseKeyBoard(this, edt_order_details);
             /*if (TextUtils.isEmpty(delegate_id))
             {
                 activity.DisplayFragmentDelegates(placeModel.getLat(),placeModel.getLng(),"reserve_order","","");
-
             }else
                 {
                 }*/
 
 
-        sendOrder();
+            sendOrder();
 
 
-    }else {
+        }else {
             if (TextUtils.isEmpty(order_details)) {
                 edt_order_details.setError(getString(R.string.field_req));
 
@@ -238,25 +255,6 @@ private UserModel userModel;
         }
     }
 
-    public void DisplayFragmentMap(String from) {
-
-        if (location != null) {
-            fragment_map = Fragment_Map.newInstance(location.getLatitude(), location.getLongitude(), from);
-
-        } else {
-            fragment_map = Fragment_Map.newInstance(0.0, 0.0, from);
-
-        }
-
-        if (fragment_map.isAdded()) {
-            fragmentManager.beginTransaction().show(fragment_map).commit();
-
-        } else {
-            fragmentManager.beginTransaction().add(R.id.fragment_app_container, fragment_map, "fragment_map").addToBackStack("fragment_map").commit();
-        }
-
-
-    }
     private void CreateTimeDialog()
     {
         final AlertDialog dialog = new AlertDialog.Builder(this)
@@ -385,7 +383,7 @@ private UserModel userModel;
         simpleRatingBar.setIndicator(false);
         simpleRatingBar.setRating(body.getData().get(0).getRate());
         tv_time.setText(body.getData().get(0).getDays().get(0).getFrom_time() + ":" + body.getData().get(0).getDays().get(0).getTo_time());
-      //    tv_status.setText(body.getData().get(0).getDays().get(0).getStatus());
+        //    tv_status.setText(body.getData().get(0).getDays().get(0).getStatus());
 
     }
 
@@ -460,9 +458,9 @@ private UserModel userModel;
                 selectedLocation = (SelectedLocation) data.getSerializableExtra("location");
                 if (selectedLocation != null) {
                     if(selectedLocation.getAddress()!=null&&!selectedLocation.getAddress().isEmpty()){
-                    tv_address.setText(selectedLocation.getAddress());
-                    tv_addess.setText(selectedLocation.getAddress().substring(0,selectedLocation.getAddress().length()/2 ));
-                }}
+                        tv_address.setText(selectedLocation.getAddress());
+                        tv_addess.setText(selectedLocation.getAddress().substring(0,selectedLocation.getAddress().length()/2 ));
+                    }}
             }
         }
         else if(requestCode==2){
@@ -490,7 +488,7 @@ private UserModel userModel;
             public void onClick(View v) {
                 dialog.dismiss();
                 //  activity.FollowOrder();
-finish();
+                finish();
 
 
 
