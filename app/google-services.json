@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "237044371975",
+    "firebase_url": "https://aamr-aaaa2.firebaseio.com",
+    "project_id": "aamr-aaaa2",
+    "storage_bucket": "aamr-aaaa2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237044371975:android:c9d375cb9d51282df1d0a2",
+        "android_client_info": {
+          "package_name": "com.endpoint.Aamr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237044371975-11jluce56cfj2c9p7ju00dtf0oj9krl4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.endpoint.Aamr",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "237044371975-m09i87s49nq7jpf00ne5mkr272d4vl6j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9oXc5k_BTvwlN_klheFSo1TxHX1ObyZ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237044371975-m09i87s49nq7jpf00ne5mkr272d4vl6j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
