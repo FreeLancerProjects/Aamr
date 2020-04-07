@@ -92,7 +92,7 @@ public class Fragment_Client_Profile extends Fragment {
         image_instagram = view.findViewById(R.id.image_instagram);
         img_certified = view.findViewById(R.id.img_certified);*/
 
-      //  tv_certified = view.findViewById(R.id.tv_certified);
+        //  tv_certified = view.findViewById(R.id.tv_certified);
 
         image_logout = view.findViewById(R.id.image_logout);
         image = view.findViewById(R.id.image);
@@ -108,7 +108,7 @@ public class Fragment_Client_Profile extends Fragment {
         cons_comment = view.findViewById(R.id.cons_comment);
         cons_setting = view.findViewById(R.id.cons_setting);
 
-      //  ll_certification = view.findViewById(R.id.ll_certification);
+        //  ll_certification = view.findViewById(R.id.ll_certification);
 
         ll_telegram = view.findViewById(R.id.ll_telegram);
 
@@ -151,13 +151,13 @@ public class Fragment_Client_Profile extends Fragment {
                 activity.DisplayFragmentAddCoupon();
             }
         });
-       /* ll_telegram.setOnClickListener(new View.OnClickListener() {
+        ll_telegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(""));
+                Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://web.telegram.org/#/im"));
                 startActivity(intent);
             }
-        });*/
+        });
 
 
        /* image_twitter.setOnClickListener(new View.OnClickListener() {
