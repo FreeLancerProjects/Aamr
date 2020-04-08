@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.endpoint.Aamr.R;
 import com.endpoint.Aamr.activities_fragments.activity_home.client_home.fragments.fragment_home.Fragment_Map;
 import com.endpoint.Aamr.activities_fragments.activity_map.MapActivity;
+import com.endpoint.Aamr.activities_fragments.activity_reviews.ReviewsActivity;
 import com.endpoint.Aamr.adapters.SliderCatogryAdapter;
 import com.endpoint.Aamr.language.Language_Helper;
 import com.endpoint.Aamr.models.CategoryModel;
