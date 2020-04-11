@@ -48,7 +48,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\End Point\Desktop\Aamr\app\src\main\res\drawable\logo.png" />
+                                      <entry key="imageAsset" value="E:\Aamr\app\src\main\res\drawable\logo.png" />
+                                      <entry key="outputName" value="ic_notification" />
                                       <entry key="theme" value="HOLO_DARK" />
                                       <entry key="themeColor" value="ffffff" />
                                     </map>
@@ -79,7 +80,7 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="foregroundImage" value="C:\Users\End Point\Desktop\Aamr\app\src\main\res\drawable\logo.png" />
+                                      <entry key="foregroundImage" value="E:\Aamr\app\src\main\res\drawable\logo.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
