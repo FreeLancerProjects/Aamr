@@ -78,6 +78,7 @@ import io.paperdb.Paper;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,6 +88,7 @@ public class ChatActivity extends AppCompatActivity {
     private TextView tv_name,tv_order_num,recordDuration;
     private CircleImageView image,image_chat_user;
     private ImageView image_send,image_back,image_upload_image,imageMic,imageDelete,imagePlay;
+    private GifImageView images;
     private Handler handler;
     private Runnable runnable;
     private EditText edt_msg_content;
@@ -122,6 +124,8 @@ public class ChatActivity extends AppCompatActivity {
     private String path;
 private SeekBar seekBar;
 private CardView cardView;
+
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(Language_Helper.updateResources(base,Language_Helper.getLanguage(base)));
@@ -173,7 +177,7 @@ private CardView cardView;
         imageDelete=findViewById(R.id.imageDelete);
         recordDuration=findViewById(R.id.recordDuration);
         cardView=findViewById(R.id.cardView);
-
+images=findViewById(R.id.images);
         seekBar=findViewById(R.id.seekBar);
         if (current_language.equals("ar")) {
             image_back.setImageResource(R.drawable.ic_right_arrow);
@@ -336,6 +340,7 @@ private CardView cardView;
 
                         }
                         initRecorder();
+
                     } else {
                         Toast.makeText(ChatActivity.this, "Cannot access mic", Toast.LENGTH_SHORT).show();
                     }
@@ -475,7 +480,7 @@ private CardView cardView;
                                     @Override
                                     public void run() {
                                         recView.scrollToPosition(messageModelList.size()-1);
-deleteFile();
+setdata();
 
                                     }
                                 },100);
@@ -487,6 +492,7 @@ deleteFile();
                                     @Override
                                     public void run() {
                                         recView.scrollToPosition(messageModelList.size()-1);
+                                        setdata();
 
                                     }
                                 },100);
@@ -512,6 +518,25 @@ deleteFile();
                     }
                 });
     }
+
+    private void setdata() {
+        cardView.setVisibility(View.GONE);
+        deleteFile();
+        // model.setAudio_name("");
+        //  model.setSound_path("");
+        //  binding.setModel(model);
+        if (mediaPlayer!=null)
+        {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+
+        if (handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
+            runnable = null;
+        }
+    }
+
     private void checkWritePermission() {
 
         if (ContextCompat.checkSelfPermission(this, audio_perm) != PackageManager.PERMISSION_GRANTED) {
@@ -552,6 +577,8 @@ deleteFile();
                 handler.removeCallbacks(runnable);
 
             });
+            images.setVisibility(View.GONE);
+
 
         } catch (IOException e) {
             Log.e("eeeex", e.getMessage());
@@ -596,7 +623,7 @@ cardView.setVisibility(View.GONE);
     }
     private void initRecorder()
     {
-
+        images.setVisibility(View.VISIBLE);
         Calendar calendar = Calendar.getInstance();
         isPermissionGranted = true;
         String audioName = "AUD" + calendar.getTimeInMillis()+ ".mp3";
