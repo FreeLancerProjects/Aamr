@@ -79,6 +79,7 @@ public class SignInActivity extends AppCompatActivity {
     private void setUpFragment()
     {
         int state = preferences.getFragmentState(this);
+        Log.e("sttstst",state+"");
         switch (state)
         {
             case 0:
@@ -233,7 +234,7 @@ public class SignInActivity extends AppCompatActivity {
     {
         Paper.book().write("lang",selected_language);
         Language_Helper.setNewLocale(this,selected_language);
-        preferences.saveLoginFragmentState(this,3);
+        preferences.saveLoginFragmentState(this,1);
 
         Intent intent = getIntent();
         finish();

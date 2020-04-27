@@ -31,6 +31,7 @@ import com.endpoint.Aamr.adapters.NearbyAdapter;
 import com.endpoint.Aamr.adapters.QueryAdapter;
 import com.endpoint.Aamr.adapters.SliderAdapter;
 import com.endpoint.Aamr.models.CategoryModel;
+import com.endpoint.Aamr.models.LocationModel;
 import com.endpoint.Aamr.models.NearbyModel;
 import com.endpoint.Aamr.models.NearbyStoreDataModel;
 import com.endpoint.Aamr.models.PhotosModel;
@@ -45,6 +46,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -409,6 +411,7 @@ public class Fragment_Client_Store extends Fragment {
 
     private void updateUi(NearbyStoreDataModel nearbyStoreDataModel, Location location) {
 
+        LocationModel.setLocation(location);
 
 
 
@@ -420,6 +423,7 @@ public class Fragment_Client_Store extends Fragment {
         }
 
         nearbyModelList.addAll(getPlaceModelFromResult(nearbyStoreDataModel.getResults()));
+        Collections.sort(nearbyModelList,PlaceModel.distanceComparator);
 
 
         recViewQueries.setVisibility(View.VISIBLE);
