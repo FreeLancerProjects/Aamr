@@ -213,7 +213,7 @@ public class SignInActivity extends AppCompatActivity {
     public void NavigateToTermsActivity()
     {
         Intent intent = new Intent(this, TermsConditionsActivity.class);
-        intent.putExtra("type",1);
+        intent.putExtra("type",3);
         startActivity(intent);
         if (current_lang.equals("ar"))
         {
@@ -233,7 +233,7 @@ public class SignInActivity extends AppCompatActivity {
     {
         Paper.book().write("lang",selected_language);
         Language_Helper.setNewLocale(this,selected_language);
-        preferences.saveLoginFragmentState(this,1);
+        preferences.saveLoginFragmentState(this,3);
 
         Intent intent = getIntent();
         finish();
