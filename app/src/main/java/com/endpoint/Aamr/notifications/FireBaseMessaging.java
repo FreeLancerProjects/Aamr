@@ -620,7 +620,8 @@ public class FireBaseMessaging extends FirebaseMessagingService {
 
 
                 }
-            } else {
+            }
+            else {
 
                 final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
@@ -678,7 +679,8 @@ public class FireBaseMessaging extends FirebaseMessagingService {
             }
 
 
-        } else {
+        }
+        else {
 
 
             final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);

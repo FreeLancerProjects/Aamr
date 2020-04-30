@@ -291,6 +291,7 @@ public class Fragment_Client_Profile extends Fragment {
                 tv_balance.setTextColor(ContextCompat.getColor(activity, R.color.delete_color));
 
             }
+            Log.e(";;;d;d;",userModel.getData().getAccount_balance()+"");
             tv_balance.setText(String.valueOf(userModel.getData().getAccount_balance()) + " " + currency.getSymbol());
 
             if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)) {
