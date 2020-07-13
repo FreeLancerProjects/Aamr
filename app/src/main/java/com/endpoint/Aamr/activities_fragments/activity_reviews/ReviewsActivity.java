@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.endpoint.Aamr.R;
 import com.endpoint.Aamr.adapters.ReviewsAdapter;
 import com.endpoint.Aamr.adapters.ReviewsCategoryAdapter;

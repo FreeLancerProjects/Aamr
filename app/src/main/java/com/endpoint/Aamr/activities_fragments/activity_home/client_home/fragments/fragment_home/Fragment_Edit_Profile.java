@@ -363,7 +363,7 @@ public class Fragment_Edit_Profile extends Fragment implements DatePickerDialog.
 
     private void Check_CameraPermission()
     {
-        if (ContextCompat.checkSelfPermission(activity,camera_permission)!= PackageManager.PERMISSION_GRANTED&&ContextCompat.checkSelfPermission(activity,write_permission)!= PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(activity,camera_permission)!= PackageManager.PERMISSION_GRANTED&& ContextCompat.checkSelfPermission(activity,write_permission)!= PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(activity,new String[]{camera_permission,write_permission},IMG2);
         }else

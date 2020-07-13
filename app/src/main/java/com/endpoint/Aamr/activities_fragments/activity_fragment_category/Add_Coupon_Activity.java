@@ -20,7 +20,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.endpoint.Aamr.R;
-import com.endpoint.Aamr.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
 import com.endpoint.Aamr.language.Language_Helper;
 import com.endpoint.Aamr.models.UserModel;
 import com.endpoint.Aamr.preferences.Preferences;

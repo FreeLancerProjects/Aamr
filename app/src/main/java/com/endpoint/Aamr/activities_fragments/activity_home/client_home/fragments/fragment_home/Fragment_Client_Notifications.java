@@ -29,6 +29,7 @@ import com.endpoint.Aamr.adapters.NotificationsAdapter;
 import com.endpoint.Aamr.models.NotificationDataModel;
 import com.endpoint.Aamr.models.NotificationModel;
 import com.endpoint.Aamr.models.UserModel;
+import com.endpoint.Aamr.preferences.Preferences;
 import com.endpoint.Aamr.remote.Api;
 import com.endpoint.Aamr.singletone.UserSingleTone;
 import com.endpoint.Aamr.tags.Tags;
@@ -164,6 +165,8 @@ public class Fragment_Client_Notifications extends Fragment {
 
                     if (response.body() != null && response.body().getData().size() > 0) {
                         ll_not.setVisibility(View.GONE);
+//                        if(Preferences.getInstance().getVisitVisitdelegete(activity)==1&&userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)){
+//                        notificationModelList.add(new NotificationModel(activity.getResources().getString(R.string.Admins),"sss"));}
                         notificationModelList.addAll(response.body().getData());
                         adapter.notifyDataSetChanged();
                         isFirstTime = false;

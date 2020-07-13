@@ -283,7 +283,7 @@
     <string name="account_name">إسم الحساب</string>
     <string name="all_products">كل المنتجات</string>
     <string name="Just_decide">فقط حدد مكان استلام المنتج ومكان التسليم ودع الامر الينا</string>
-    <string name="Welcome_to_Jack">اهلا بك فى آمر</string>
+    <string name="Welcome_to_Aamr">اهلا بك فى آمر</string>
     <string name="We_deliver_orders_anytime_anywhere">نقوم بتوصيل الطلبات فى اى وقت والى اى مكان</string>
     <string name="best_offer">افضل العروض</string>
     <string name="We_show">نعرض لك افضل العروض على العديد من المنتجات وفى كثير من التصنيفات</string>
@@ -314,5 +314,12 @@
     <string name="stcPay">Stc Pay</string>
     <string name="rate_of_category">تقييم القسم</string>
     <string name="rate_this">قيم هذا</string>
+    <string name="pay">دفع</string>
+    <string name="rechager">سداد الرصيد</string>
+    <string name="you_pay">سوف تدفع</string>
+    <string name="order_delete">العميل حذف الطلب</string>
+    <string name="you_cant">لا يمكنك ان تشحن بقيمه صفر</string>
+    <string name="bank_account_number">رقم الحساب البنكى</string>
+    <string name="place_name">اسم المكان</string>
 
 </resources>

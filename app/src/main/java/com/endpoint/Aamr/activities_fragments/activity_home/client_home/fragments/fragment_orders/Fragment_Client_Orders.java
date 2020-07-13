@@ -48,9 +48,9 @@ public class Fragment_Client_Orders extends Fragment {
     private List<Fragment> fragmentList;
     private List<String> titleList;
     private ArrayAdapter spinnerArrayAdapter;
-private Spinner sptype;
+    private Spinner sptype;
     private ArrayList<String> spinnerArray;
-private ClientHomeActivity clientHomeActivity;
+    private ClientHomeActivity clientHomeActivity;
 
     private ProgressBar progBar;
     private RecyclerView recView;
@@ -65,44 +65,43 @@ private ClientHomeActivity clientHomeActivity;
     private int current_page = 1;
     private Call<OrderDataModel> call;
     private boolean isFirstTime = true;
-    private String type="current";
+    private String type = "current";
+
     @Override
     public void onStart() {
         super.onStart();
-        if (!isFirstTime&&ordersAdapteradapter!=null)
-        {
+        if (!isFirstTime && ordersAdapteradapter != null) {
             ordersAdapteradapter.notifyDataSetChanged();
         }
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_client_orders,container,false);
+        View view = inflater.inflate(R.layout.fragment_client_orders, container, false);
         initView(view);
         return view;
     }
 
-    public static Fragment_Client_Orders newInstance()
-    {
+    public static Fragment_Client_Orders newInstance() {
         return new Fragment_Client_Orders();
     }
 
-    private void initView(View view)
-    {
-        clientHomeActivity=(ClientHomeActivity)getActivity();
+    private void initView(View view) {
+        clientHomeActivity = (ClientHomeActivity) getActivity();
         tab = view.findViewById(R.id.tab);
         pager = view.findViewById(R.id.pager);
-        sptype=view.findViewById(R.id.sp_type);
-   spinnerArray = new ArrayList<String>();
-   spinnerArray.add(clientHomeActivity.getResources().getString(R.string.active1));
+        sptype = view.findViewById(R.id.sp_type);
+        spinnerArray = new ArrayList<String>();
+        spinnerArray.add(clientHomeActivity.getResources().getString(R.string.active1));
         spinnerArray.add(clientHomeActivity.getResources().getString(R.string.inactive1));
 
         spinnerArrayAdapter = new ArrayAdapter(clientHomeActivity,
                 R.layout.spinner_item,
                 spinnerArray);
         sptype.setAdapter(spinnerArrayAdapter);
-      //  pager.setVisibility(View.GONE);
-       // tab.setupWithViewPager(pager);
+        //  pager.setVisibility(View.GONE);
+        // tab.setupWithViewPager(pager);
 //        pager.setOffscreenPageLimit(3);
 //        fragmentList = new ArrayList<>();
 //        titleList = new ArrayList<>();
@@ -126,11 +125,11 @@ private ClientHomeActivity clientHomeActivity;
         tv_no_orders = view.findViewById(R.id.tv_no_orders);
 
         progBar = view.findViewById(R.id.progBar);
-        progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         recView = view.findViewById(R.id.recView);
         manager = new LinearLayoutManager(activity);
         recView.setLayoutManager(manager);
-        ordersAdapteradapter = new OrdersAdapter(orderModelList,activity,userModel.getData().getUser_type(),this);
+        ordersAdapteradapter = new OrdersAdapter(orderModelList, activity, userModel.getData().getUser_type(), this);
         recView.setAdapter(ordersAdapteradapter);
 
         recView.setDrawingCacheEnabled(true);
@@ -138,93 +137,84 @@ private ClientHomeActivity clientHomeActivity;
         recView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         manager = new LinearLayoutManager(activity);
-        recView.setLayoutManager(manager); recView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            if (dy>0)
-            {
-                int lastVisibleItem = ((LinearLayoutManager)manager).findLastCompletelyVisibleItemPosition();
-                int totalItems = manager.getItemCount();
+        recView.setLayoutManager(manager);
+        recView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    int lastVisibleItem = ((LinearLayoutManager) manager).findLastCompletelyVisibleItemPosition();
+                    int totalItems = manager.getItemCount();
 
-                if (lastVisibleItem>=(totalItems-5)&&!isLoading)
-                {
-                    isLoading = true;
-                    orderModelList.add(null);
-                    ordersAdapteradapter.notifyItemInserted(orderModelList.size()-1);
-                    int next_page = current_page+1;
-                    loadMore(next_page);
+                    if (lastVisibleItem >= (totalItems - 5) && !isLoading) {
+                        isLoading = true;
+                        orderModelList.add(null);
+                        ordersAdapteradapter.notifyItemInserted(orderModelList.size() - 1);
+                        int next_page = current_page + 1;
+                        loadMore(next_page);
+                    }
                 }
             }
-        }
-    });
+        });
         getOrders();
-sptype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(position==0){
-            if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)){
-            type="current";}
-            else {
-                type="current";
+        sptype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)) {
+                        type = "current";
+                    } else {
+                        type = "current";
+                    }
+                } else {
+                    type = "old";
+                }
+                getOrders();
             }
-        }
-        else {
-            type="old";
-        }
-        getOrders();
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    public void getOrders() {
 
-    }
-});
-    }
-
-    public void getOrders()
-    {
-
-        if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT))
-        {
-            call  = Api.getService(Tags.base_url).getClientOrders(userModel.getData().getUser_id(),type, 1);
-        }else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE))
-        {
-            call  = Api.getService(Tags.base_url).getDelegateOrders(userModel.getData().getUser_id(),type, 1);
+        if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)) {
+            call = Api.getService(Tags.base_url).getClientOrders(userModel.getData().getUser_id(), type, 1);
+        } else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)) {
+            call = Api.getService(Tags.base_url).getDelegateOrders(userModel.getData().getUser_id(), type, 1);
 
         }
 
         progBar.setVisibility(View.VISIBLE);
-orderModelList.clear();
-ordersAdapteradapter.notifyDataSetChanged();
+        orderModelList.clear();
+        ordersAdapteradapter.notifyDataSetChanged();
         call.enqueue(new Callback<OrderDataModel>() {
             @Override
             public void onResponse(Call<OrderDataModel> call, Response<OrderDataModel> response) {
                 progBar.setVisibility(View.GONE);
-                if (response.isSuccessful())
-                {
+                if (response.isSuccessful()) {
                     orderModelList.clear();
 
-                    if (response.body()!=null&&response.body().getData().size()>0)
-                    {
+                    if (response.body() != null && response.body().getData().size() > 0) {
                         tv_no_orders.setVisibility(View.GONE);
                         orderModelList.addAll(response.body().getData());
                         ordersAdapteradapter.notifyDataSetChanged();
-                        isFirstTime =false;
+                        isFirstTime = false;
 
-                    }else
-                    {
+                    } else {
                         ordersAdapteradapter.notifyDataSetChanged();
 
                         tv_no_orders.setVisibility(View.VISIBLE);
 
                     }
-                }else
-                {
+                } else {
 
-                    Toast.makeText(activity,R.string.failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.failed, Toast.LENGTH_SHORT).show();
                     try {
-                        Log.e("Error_code",response.code()+"_"+response.errorBody().string());
+                        Log.e("Error_code", response.code() + "_" + response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -236,23 +226,20 @@ ordersAdapteradapter.notifyDataSetChanged();
                 try {
                     progBar.setVisibility(View.GONE);
                     Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
-                    Log.e("Error",t.getMessage());
-                }catch (Exception e){}
+                    Log.e("Error", t.getMessage());
+                } catch (Exception e) {
+                }
             }
         });
     }
 
-    private void loadMore(int page_index)
-    {
+    private void loadMore(int page_index) {
 
 
-
-        if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT))
-        {
-            call  = Api.getService(Tags.base_url).getClientOrders(userModel.getData().getUser_id(),type, page_index);
-        }else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE))
-        {
-            call  = Api.getService(Tags.base_url).getDelegateOrders(userModel.getData().getUser_id(),type, page_index);
+        if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)) {
+            call = Api.getService(Tags.base_url).getClientOrders(userModel.getData().getUser_id(), type, page_index);
+        } else if (userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)) {
+            call = Api.getService(Tags.base_url).getDelegateOrders(userModel.getData().getUser_id(), type, page_index);
 
         }
 
@@ -260,27 +247,24 @@ ordersAdapteradapter.notifyDataSetChanged();
         call.enqueue(new Callback<OrderDataModel>() {
             @Override
             public void onResponse(Call<OrderDataModel> call, Response<OrderDataModel> response) {
-                orderModelList.remove(orderModelList.size()-1);
+                orderModelList.remove(orderModelList.size() - 1);
                 ordersAdapteradapter.notifyDataSetChanged();
                 isLoading = false;
 
-                if (response.isSuccessful())
-                {
+                if (response.isSuccessful()) {
 
-                    if (response.body()!=null&&response.body().getData().size()>0)
-                    {
+                    if (response.body() != null && response.body().getData().size() > 0) {
                         orderModelList.addAll(response.body().getData());
                         ordersAdapteradapter.notifyDataSetChanged();
                         current_page = response.body().getMeta().getCurrent_page();
 
                     }
-                }else
-                {
+                } else {
 
 
-                    Toast.makeText(activity,R.string.failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.failed, Toast.LENGTH_SHORT).show();
                     try {
-                        Log.e("Error_code",response.code()+"_"+response.errorBody().string());
+                        Log.e("Error_code", response.code() + "_" + response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -291,20 +275,20 @@ ordersAdapteradapter.notifyDataSetChanged();
             public void onFailure(Call<OrderDataModel> call, Throwable t) {
                 try {
                     isLoading = false;
-                    if (orderModelList.get(orderModelList.size()-1)==null)
-                    {
-                        orderModelList.remove(orderModelList.size()-1);
+                    if (orderModelList.get(orderModelList.size() - 1) == null) {
+                        orderModelList.remove(orderModelList.size() - 1);
                         ordersAdapteradapter.notifyDataSetChanged();
                     }
                     progBar.setVisibility(View.GONE);
                     Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
-                    Log.e("Error",t.getMessage());
-                }catch (Exception e){}
+                    Log.e("Error", t.getMessage());
+                } catch (Exception e) {
+                }
             }
         });
     }
-    public void NavigateToFragmentRefresh(int pos)
-    {
+
+    public void NavigateToFragmentRefresh(int pos) {
 //        pager.setCurrentItem(pos,true);
 //        if (pos==0)
 //        {
@@ -324,9 +308,8 @@ ordersAdapteradapter.notifyDataSetChanged();
 //        }
     }
 
-    public void RefreshOrderFragments()
-    {
-        if(fragmentList!=null&&fragmentList.size()>0) {
+    public void RefreshOrderFragments() {
+        if (fragmentList != null && fragmentList.size() > 0) {
             Fragment_Client_New_Orders fragment_client_new_orders = (Fragment_Client_New_Orders) fragmentList.get(0);
             Fragment_Client_Current_Orders fragment_client_current_orders = (Fragment_Client_Current_Orders) fragmentList.get(1);
             Fragment_Client_Previous_Orders fragment_client_previous_orders = (Fragment_Client_Previous_Orders) fragmentList.get(2);
@@ -337,20 +320,19 @@ ordersAdapteradapter.notifyDataSetChanged();
         }
 
     }
+
     public void setItemData(OrderDataModel.OrderModel orderModel) {
 
-        if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT))
-        {
+        if (userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)) {
             activity.DisplayFragmentClientOrderDetails(orderModel);
 
-        }else
-        {
-            if(orderModel.getOrder_status().equals("0")){
+        } else {
+            if (orderModel.getOrder_status().equals("0")) {
                 activity.DisplayFragmentDelegateAddOffer(orderModel);
 
+            } else {
+                activity.DisplayFragmentDelegateCurrentOrderDetails(orderModel);
             }
-            else {
-            activity.DisplayFragmentDelegateCurrentOrderDetails(orderModel);}
         }
     }
 }

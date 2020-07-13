@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.endpoint.Aamr.R;
 import com.endpoint.Aamr.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
 import com.endpoint.Aamr.adapters.WaitOrderAdapter;

@@ -26,7 +26,6 @@ public class PlaceModel implements Serializable {
                     (SphericalUtil.computeDistanceBetween(new LatLng(LocationModel.getLocation().getLatitude(),LocationModel.getLocation().getLongitude()),new LatLng(jc2.getLat(),jc2.getLng())) == SphericalUtil.computeDistanceBetween(new LatLng(LocationModel.getLocation().getLatitude(),LocationModel.getLocation().getLongitude()),new LatLng(jc1.getLat(),jc1.getLng()))? 0 : -1));
         }
     };
-
     public PlaceModel(String id, String place_id, String name, String icon, List<PhotosModel> photosList, float rating, double lat, double lng, String address) {
         this.id = id;
         this.place_id = place_id;

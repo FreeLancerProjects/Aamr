@@ -49,8 +49,7 @@ public class Tags {
     public static final String FIREBASE_NOT_RATE = "rate";
     public static final String FIREBASE_NOT_BEDRIVER = "be_driver";
     public static final String FIREBASE_NOT_DRIVER_UPDATE_LOCATION = "driver_update_location";
-
-
+    public static final String FIREBASE_Order_Deleted = "order_deleted";
 
 
     public static final String MESSAGE_TEXT = "1";

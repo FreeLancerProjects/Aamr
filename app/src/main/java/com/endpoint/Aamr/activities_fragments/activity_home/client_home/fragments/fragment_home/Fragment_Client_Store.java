@@ -109,7 +109,6 @@ public class Fragment_Client_Store extends Fragment {
         mainNearbyModelList = new ArrayList<>();
         categoryModels = new ArrayList<>();
         queriesList = new ArrayList<>();
-        queriesList.add("all");
 
         queriesList.add("restaurant");
         queriesList.add("bakery");
@@ -117,15 +116,16 @@ public class Fragment_Client_Store extends Fragment {
         queriesList.add("cafe");
         queriesList.add("store");
         queriesList.add("florist");
+        queriesList.add("pharmacy");
 
         en_ar_queriesList = new ArrayList<>();
-        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.all),R.drawable.map));
         en_ar_queriesList.add(new QuerySearchModel(getString(R.string.restaurant),R.drawable.ic_restaurant));
         en_ar_queriesList.add(new QuerySearchModel(getString(R.string.bakery),R.drawable.ic_sweet));
         en_ar_queriesList.add(new QuerySearchModel(getString(R.string.supermarket),R.drawable.ic_nav_store));
         en_ar_queriesList.add(new QuerySearchModel(getString(R.string.cafe),R.drawable.ic_cup));
         en_ar_queriesList.add(new QuerySearchModel(getString(R.string.store),R.drawable.ic_store));
         en_ar_queriesList.add(new QuerySearchModel(getString(R.string.florist),R.drawable.ic_gift));
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.pharmacies),R.drawable.ic_pharmacy));
 
 
 
@@ -148,7 +148,7 @@ public class Fragment_Client_Store extends Fragment {
         recView = view.findViewById(R.id.recView);
         recviewcat=view.findViewById(R.id.reccat);
         manager = new LinearLayoutManager(activity);
-        managercat=new LinearLayoutManager(activity,RecyclerView.HORIZONTAL,false);
+        managercat=new LinearLayoutManager(activity, RecyclerView.HORIZONTAL,false);
         recviewcat.setLayoutManager(managercat);
         recviewcat.setDrawingCacheEnabled(true);
         recviewcat.setItemViewCacheSize(20);
@@ -159,7 +159,7 @@ public class Fragment_Client_Store extends Fragment {
         recView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
         recView.setNestedScrollingEnabled(false);
         recViewQueries = view.findViewById(R.id.recViewQueries);
-        managerQueries = new LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false);
+        managerQueries = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL,false);
         recViewQueries.setLayoutManager(managerQueries);
         queryAdapter = new QueryAdapter(en_ar_queriesList,activity,this);
         recViewQueries.setAdapter(queryAdapter);
@@ -355,7 +355,7 @@ public class Fragment_Client_Store extends Fragment {
             String loc = location.getLatitude()+","+location.getLongitude();
 
             Api.getService("https://maps.googleapis.com/maps/api/")
-                    .getNearbyStores(loc,15000,query,current_language,getString(R.string.map_api_key))
+                    .getNearbyStores(loc,5000,query,current_language,getString(R.string.map_api_key))
                     .enqueue(new Callback<NearbyStoreDataModel>() {
                         @Override
                         public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
@@ -411,8 +411,8 @@ public class Fragment_Client_Store extends Fragment {
 
     private void updateUi(NearbyStoreDataModel nearbyStoreDataModel, Location location) {
 
-        LocationModel.setLocation(location);
 
+        LocationModel.setLocation(location);
 
 
         if (mainNearbyModelList.size()==0)

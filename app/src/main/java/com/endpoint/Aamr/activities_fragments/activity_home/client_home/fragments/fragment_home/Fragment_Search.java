@@ -340,6 +340,7 @@ public class Fragment_Search extends Fragment
 
         nearbyModelList.addAll(results);
         Collections.sort(nearbyModelList,NearbyModel.distanceComparator);
+
         adapter.notifyDataSetChanged();
         queryModelList.clear();
         queryModelList.addAll(preferences.getAllQueries(activity));

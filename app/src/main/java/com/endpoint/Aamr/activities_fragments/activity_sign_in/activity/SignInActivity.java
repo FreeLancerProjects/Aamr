@@ -79,7 +79,6 @@ public class SignInActivity extends AppCompatActivity {
     private void setUpFragment()
     {
         int state = preferences.getFragmentState(this);
-        Log.e("sttstst",state+"");
         switch (state)
         {
             case 0:

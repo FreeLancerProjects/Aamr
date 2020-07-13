@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-
 import com.endpoint.Aamr.R;
 import com.endpoint.Aamr.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
 import com.endpoint.Aamr.adapters.ViewPagerAdapter;

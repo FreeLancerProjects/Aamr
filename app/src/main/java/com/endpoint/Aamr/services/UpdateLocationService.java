@@ -24,7 +24,7 @@ import com.google.android.gms.location.LocationServices;
 
 import org.greenrobot.eventbus.EventBus;
 
-public class UpdateLocationService extends Service implements LocationListener ,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener{
+public class UpdateLocationService extends Service implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
@@ -134,7 +134,7 @@ public class UpdateLocationService extends Service implements LocationListener ,
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        accuracy = intent.getIntExtra("accuracy",LocationRequest.PRIORITY_HIGH_ACCURACY);
+        accuracy = intent.getIntExtra("accuracy", LocationRequest.PRIORITY_HIGH_ACCURACY);
         Log.e("accc",accuracy+"");
         initGoogleApiClient();
 

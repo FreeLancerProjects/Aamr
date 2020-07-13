@@ -38,7 +38,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private Context context;
     private Fragment fragment;
 
-    public OrdersAdapter(List<OrderDataModel.OrderModel> orderModelList, Context context,String user_type,Fragment fragment) {
+    public OrdersAdapter(List<OrderDataModel.OrderModel> orderModelList, Context context, String user_type, Fragment fragment) {
 
         this.orderModelList = orderModelList;
         this.context = context;
