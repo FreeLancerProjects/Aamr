@@ -263,22 +263,22 @@ public class Fragment_Reserve_Order extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (placeDetails!=null&&placeDetails.getReviews()!=null)
-                {
-                    if (placeDetails.getReviews().size()>0)
-                    {
-                        Intent intent = new Intent(activity, ReviewsActivity.class);
-                        intent.putExtra("data",placeDetails);
-                        startActivity(intent);
-                    }else
-                    {
-                        Toast.makeText(activity, getString(R.string.no_rev), Toast.LENGTH_SHORT).show();
-                    }
-                }else
-                {
-                    Toast.makeText(activity, getString(R.string.no_rev), Toast.LENGTH_SHORT).show();
-
-                }
+//                if (placeDetails!=null&&placeDetails.getReviews()!=null)
+//                {
+//                    if (placeDetails.getReviews().size()>0)
+//                    {
+//                        Intent intent = new Intent(activity, ReviewsActivity.class);
+//                        intent.putExtra("data",placeDetails);
+//                        startActivity(intent);
+//                    }else
+//                    {
+//                        Toast.makeText(activity, getString(R.string.no_rev), Toast.LENGTH_SHORT).show();
+//                    }
+//                }else
+//                {
+//                    Toast.makeText(activity, getString(R.string.no_rev), Toast.LENGTH_SHORT).show();
+//
+//                }
             }
         });
 
