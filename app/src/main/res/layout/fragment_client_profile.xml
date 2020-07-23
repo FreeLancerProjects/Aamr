@@ -567,6 +567,7 @@
                 android:paddingRight="12dp"
                 >
                 <ImageView
+                    android:id="@+id/imagetelegram"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:src="@drawable/telegram"
@@ -574,6 +575,7 @@
                     android:longClickable="false"
                     />
                 <TextView
+                    android:id="@+id/tv_contact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"

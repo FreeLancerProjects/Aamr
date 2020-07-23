@@ -59,14 +59,14 @@ import retrofit2.Response;
 
 public class Fragment_Client_Store extends Fragment {
     private ClientHomeActivity activity;
-    private LinearLayout ll_search,ll_no_store;
+    private LinearLayout ll_search, ll_no_store;
     private CardView cardView;
-    private ProgressBar progBar,progBarSlider;
-    private RecyclerView recView,recViewQueries,recviewcat;
-    private LinearLayoutManager manager,managerQueries,managercat;
+    private ProgressBar progBar, progBarSlider;
+    private RecyclerView recView, recViewQueries, recviewcat;
+    private LinearLayoutManager manager, managerQueries, managercat;
     private NearbyAdapter adapter;
     private CategoryAdapter categoryAdapter;
-    private List<PlaceModel> nearbyModelList,mainNearbyModelList;
+    private List<PlaceModel> nearbyModelList, mainNearbyModelList;
     private ViewPager pager;
     private TabLayout tab;
     private FrameLayout fl_slider;
@@ -78,17 +78,18 @@ public class Fragment_Client_Store extends Fragment {
     private TimerTask timerTask;
     private SliderAdapter sliderAdapter;
     private String current_language;
-    private List<CategoryModel.Data>categoryModels;
+    private List<CategoryModel.Data> categoryModels;
     private int current_page = 1;
     private boolean isLoading = false;
     private Preferences preferences;
     private UserModel userModel;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_client_store, container, false);
         initView(view);
-        if(location!=null&&savedInstanceState!=null){
+        if (location != null && savedInstanceState != null) {
             activity.DisplayFragmentHomeView();
         }
         return view;
@@ -101,8 +102,8 @@ public class Fragment_Client_Store extends Fragment {
     private void initView(View view) {
 
         activity = (ClientHomeActivity) getActivity();
-        preferences= Preferences.getInstance();
-        userModel=preferences.getUserData(activity);
+        preferences = Preferences.getInstance();
+        userModel = preferences.getUserData(activity);
         Paper.init(activity);
         current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
         nearbyModelList = new ArrayList<>();
@@ -111,23 +112,27 @@ public class Fragment_Client_Store extends Fragment {
         queriesList = new ArrayList<>();
 
         queriesList.add("restaurant");
-        queriesList.add("bakery");
-        queriesList.add("supermarket");
         queriesList.add("cafe");
-        queriesList.add("store");
-        queriesList.add("florist");
         queriesList.add("pharmacy");
+        queriesList.add("supermarket");
+        queriesList.add("bakery");
+        queriesList.add("library");
+        queriesList.add("florist");
+        queriesList.add("store");
+        queriesList.add("gas_station");
 
         en_ar_queriesList = new ArrayList<>();
-        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.restaurant),R.drawable.ic_restaurant));
-        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.bakery),R.drawable.ic_sweet));
-        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.supermarket),R.drawable.ic_nav_store));
-        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.cafe),R.drawable.ic_cup));
-        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.store),R.drawable.ic_store));
-        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.florist),R.drawable.ic_gift));
-        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.pharmacies),R.drawable.ic_pharmacy));
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.restaurant), R.drawable.ic_restaurant));
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.cafe), R.drawable.ic_cup));
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.pharmacies), R.drawable.ic_pharmacy));
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.supermarket), R.drawable.ic_nav_store));
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.bakery), R.drawable.ic_sweet));
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.library), R.drawable.ic_sweet));
 
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.florist), R.drawable.ic_gift));
 
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.store), R.drawable.ic_store));
+        en_ar_queriesList.add(new QuerySearchModel(getString(R.string.gas_station), R.drawable.ic_store));
 
 
         ll_search = view.findViewById(R.id.ll_search);
@@ -141,14 +146,14 @@ public class Fragment_Client_Store extends Fragment {
 
         fl_slider = view.findViewById(R.id.fl_slider);
         progBarSlider = view.findViewById(R.id.progBarSlider);
-        progBarSlider.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        progBarSlider.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
         progBar = view.findViewById(R.id.progBar);
-        progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity,R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(activity, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         recView = view.findViewById(R.id.recView);
-        recviewcat=view.findViewById(R.id.reccat);
+        recviewcat = view.findViewById(R.id.reccat);
         manager = new LinearLayoutManager(activity);
-        managercat=new LinearLayoutManager(activity, RecyclerView.HORIZONTAL,false);
+        managercat = new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false);
         recviewcat.setLayoutManager(managercat);
         recviewcat.setDrawingCacheEnabled(true);
         recviewcat.setItemViewCacheSize(20);
@@ -159,11 +164,11 @@ public class Fragment_Client_Store extends Fragment {
         recView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
         recView.setNestedScrollingEnabled(false);
         recViewQueries = view.findViewById(R.id.recViewQueries);
-        managerQueries = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL,false);
+        managerQueries = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false);
         recViewQueries.setLayoutManager(managerQueries);
-        queryAdapter = new QueryAdapter(en_ar_queriesList,activity,this);
+        queryAdapter = new QueryAdapter(en_ar_queriesList, activity, this);
         recViewQueries.setAdapter(queryAdapter);
-        categoryAdapter=new CategoryAdapter(categoryModels,activity,this);
+        categoryAdapter = new CategoryAdapter(categoryModels, activity, this);
         recviewcat.setAdapter(categoryAdapter);
         ll_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,10 +176,6 @@ public class Fragment_Client_Store extends Fragment {
                 activity.DisplayFragmentSearch();
             }
         });
-
-
-
-
 
 
 //       recviewcat .addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -210,7 +211,7 @@ public class Fragment_Client_Store extends Fragment {
                 .getcatogries(current_language)
                 .enqueue(new Callback<CategoryModel>() {
                     @Override
-                    public void onResponse(Call<CategoryModel>  call, Response<CategoryModel> response) {
+                    public void onResponse(Call<CategoryModel> call, Response<CategoryModel> response) {
                         //  progBar.setVisibility(View.GONE);
                         if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                             categoryModels.clear();
@@ -262,20 +263,18 @@ public class Fragment_Client_Store extends Fragment {
                     public void onResponse(Call<SliderModel> call, Response<SliderModel> response) {
                         progBarSlider.setVisibility(View.GONE);
 
-                        if (response.isSuccessful()&&response.body()!=null)
-                        {
+                        if (response.isSuccessful() && response.body() != null) {
                             updateSliderData(response.body());
-                        }else
-                        {
+                        } else {
 
                             try {
-                                Log.e("error_code",response.code()+"_"+response.errorBody().string());
+                                Log.e("error_code", response.code() + "_" + response.errorBody().string());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             pager.setVisibility(View.GONE);
                             try {
-                                Log.e("error_code",response.code()+"_"+response.errorBody().string());
+                                Log.e("error_code", response.code() + "_" + response.errorBody().string());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -292,94 +291,84 @@ public class Fragment_Client_Store extends Fragment {
                             progBarSlider.setVisibility(View.GONE);
 
                             pager.setVisibility(View.GONE);
-                            Log.e("Error",t.getMessage());
+                            Log.e("Error", t.getMessage());
 
-                        }catch (Exception e){}
+                        } catch (Exception e) {
+                        }
                     }
                 });
     }
 
     private void updateSliderData(SliderModel sliderModel) {
 
-        if (sliderModel.getData().size()>0)
-        {
+        if (sliderModel.getData().size() > 0) {
             pager.setVisibility(View.VISIBLE);
 
-            if (sliderModel.getData().size()>1)
-            {
+            if (sliderModel.getData().size() > 1) {
                 timer = new Timer();
                 timerTask = new MyTimerTask();
-                timer.scheduleAtFixedRate(timerTask,6000,6000);
+                timer.scheduleAtFixedRate(timerTask, 6000, 6000);
             }
-            sliderAdapter = new SliderAdapter(sliderModel.getData(),activity);
+            sliderAdapter = new SliderAdapter(sliderModel.getData(), activity);
             pager.setAdapter(sliderAdapter);
 
-            for (int i=0;i<tab.getTabCount()-1;i++)
-            {
-                View view = ((ViewGroup)tab.getChildAt(0)).getChildAt(i);
+            for (int i = 0; i < tab.getTabCount() - 1; i++) {
+                View view = ((ViewGroup) tab.getChildAt(0)).getChildAt(i);
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-                params.setMargins(5,0,5,0);
+                params.setMargins(5, 0, 5, 0);
                 tab.requestLayout();
             }
 
 
-        }else
+        } else
 
             pager.setVisibility(View.GONE);
         {
             pager.setVisibility(View.GONE);
 
         }
-
 
 
     }
 
 
     @SuppressLint("MissingPermission")
-    public void getNearbyPlaces(final Location location,String query)
-    {
+    public void getNearbyPlaces(final Location location, String query) {
         getAds();
         progBar.setVisibility(View.VISIBLE);
         cardView.setVisibility(View.VISIBLE);
         ll_no_store.setVisibility(View.GONE);
         nearbyModelList.clear();
-        if (adapter!=null)
-        {
+        if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
 
-        if (location!=null)
-        {
+        if (location != null) {
             this.location = location;
-            String loc = location.getLatitude()+","+location.getLongitude();
+            String loc = location.getLatitude() + "," + location.getLongitude();
 
             Api.getService("https://maps.googleapis.com/maps/api/")
-                    .getNearbyStores(loc,5000,query,current_language,getString(R.string.map_api_key))
+                    .getNearbyStores(loc, 5000, query, current_language, getString(R.string.map_api_key))
                     .enqueue(new Callback<NearbyStoreDataModel>() {
                         @Override
                         public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
                             //    Log.e("jjjjjj",response.code()+"");
 
-                            if (response.isSuccessful()&&response.body()!=null)
-                            {
+                            if (response.isSuccessful() && response.body() != null) {
                                 progBar.setVisibility(View.GONE);
-                                if (response.body().getResults().size()>0)
-                                {
+                                if (response.body().getResults().size() > 0) {
                                     ll_no_store.setVisibility(View.GONE);
-                                    updateUi(response.body(),location);
-                                }else
-                                {
+                                    updateUi(response.body(), location);
+                                } else {
                                     ll_no_store.setVisibility(View.VISIBLE);
 
                                 }
-                            }else
-                            {
+                            } else {
 
                                 progBar.setVisibility(View.GONE);
 
                                 try {
-                                    Log.e("error_code",response.errorBody().string());
+                                    Log.e("error_code", response.errorBody().string());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -392,18 +381,16 @@ public class Fragment_Client_Store extends Fragment {
                         public void onFailure(Call<NearbyStoreDataModel> call, Throwable t) {
                             try {
 
-                                Log.e("Error",t.getMessage());
+                                Log.e("Error", t.getMessage());
                                 progBar.setVisibility(View.GONE);
                                 Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_LONG).show();
-                            }catch (Exception e)
-                            {
+                            } catch (Exception e) {
 
                             }
                         }
                     });
-        }
-        else {
-            Log.e("jjjjjj","lfklfkkfk");
+        } else {
+            Log.e("jjjjjj", "lfklfkkfk");
 
         }
 
@@ -415,25 +402,22 @@ public class Fragment_Client_Store extends Fragment {
         LocationModel.setLocation(location);
 
 
-        if (mainNearbyModelList.size()==0)
-        {
+        if (mainNearbyModelList.size() == 0) {
             mainNearbyModelList.clear();
             mainNearbyModelList.addAll(getPlaceModelFromResult(nearbyStoreDataModel.getResults()));
 
         }
 
         nearbyModelList.addAll(getPlaceModelFromResult(nearbyStoreDataModel.getResults()));
-        Collections.sort(nearbyModelList,PlaceModel.distanceComparator);
+        Collections.sort(nearbyModelList, PlaceModel.distanceComparator);
 
 
         recViewQueries.setVisibility(View.VISIBLE);
-        if (adapter == null)
-        {
-            adapter = new NearbyAdapter(nearbyModelList,activity,this,location.getLatitude(),location.getLongitude());
+        if (adapter == null) {
+            adapter = new NearbyAdapter(nearbyModelList, activity, this, location.getLatitude(), location.getLongitude());
             recView.setAdapter(adapter);
 
-        }else
-        {
+        } else {
             adapter.notifyDataSetChanged();
         }
 
@@ -441,31 +425,25 @@ public class Fragment_Client_Store extends Fragment {
 
     }
 
-    private List<PlaceModel> getPlaceModelFromResult(List<NearbyModel> nearbyModelList)
-    {
+    private List<PlaceModel> getPlaceModelFromResult(List<NearbyModel> nearbyModelList) {
         List<PlaceModel> returnedList = new ArrayList<>();
-        for (NearbyModel nearbyModel : nearbyModelList)
-        {
+        for (NearbyModel nearbyModel : nearbyModelList) {
 
 
             PlaceModel placeModel;
 
-            if (nearbyModel.getPhotos()!=null)
-            {
-                placeModel = new PlaceModel(nearbyModel.getId(),nearbyModel.getPlace_id(),nearbyModel.getName(),nearbyModel.getIcon(),nearbyModel.getPhotos(),nearbyModel.getRating(),nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng(),nearbyModel.getVicinity());
+            if (nearbyModel.getPhotos() != null) {
+                placeModel = new PlaceModel(nearbyModel.getId(), nearbyModel.getPlace_id(), nearbyModel.getName(), nearbyModel.getIcon(), nearbyModel.getPhotos(), nearbyModel.getRating(), nearbyModel.getGeometry().getLocation().getLat(), nearbyModel.getGeometry().getLocation().getLng(), nearbyModel.getVicinity());
 
-            }else
-            {
-                placeModel = new PlaceModel(nearbyModel.getId(),nearbyModel.getPlace_id(),nearbyModel.getName(),nearbyModel.getIcon(),new ArrayList<PhotosModel>(),nearbyModel.getRating(),nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng(),nearbyModel.getVicinity());
+            } else {
+                placeModel = new PlaceModel(nearbyModel.getId(), nearbyModel.getPlace_id(), nearbyModel.getName(), nearbyModel.getIcon(), new ArrayList<PhotosModel>(), nearbyModel.getRating(), nearbyModel.getGeometry().getLocation().getLat(), nearbyModel.getGeometry().getLocation().getLng(), nearbyModel.getVicinity());
 
             }
 
-            if (nearbyModel.getOpening_hours()!=null)
-            {
+            if (nearbyModel.getOpening_hours() != null) {
                 placeModel.setOpenNow(nearbyModel.getOpening_hours().isOpen_now());
 
-            }else
-            {
+            } else {
                 placeModel.setOpenNow(false);
 
 
@@ -481,33 +459,28 @@ public class Fragment_Client_Store extends Fragment {
 
     }
 
-    public void setQueryItemData(int pos)
-    {
-        if (pos == 0)
-        {
+    public void setQueryItemData(int pos) {
+        if (pos == 0) {
             nearbyModelList.clear();
             nearbyModelList.addAll(mainNearbyModelList);
-            if (mainNearbyModelList.size()>0)
-            {
+            if (mainNearbyModelList.size() > 0) {
                 ll_no_store.setVisibility(View.GONE);
 
             }
-            if (adapter!=null)
-            {
+            if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
-        }else
-        {
+        } else {
             String query = queriesList.get(pos);
-            getNearbyPlaces(location,query);
+            getNearbyPlaces(location, query);
 
         }
     }
 
     public void Displaycatogry(CategoryModel.Data data) {
-        Intent intent=new Intent(activity, CategoryActivity.class);
-        intent.putExtra("data",data);
-        startActivityForResult(intent,2);
+        Intent intent = new Intent(activity, CategoryActivity.class);
+        intent.putExtra("data", data);
+        startActivityForResult(intent, 2);
     }
 
     private class MyTimerTask extends TimerTask {
@@ -517,11 +490,9 @@ public class Fragment_Client_Store extends Fragment {
                 @Override
                 public void run() {
 
-                    if (pager.getCurrentItem()<pager.getAdapter().getCount()-1)
-                    {
-                        pager.setCurrentItem(pager.getCurrentItem()+1,true);
-                    }else
-                    {
+                    if (pager.getCurrentItem() < pager.getAdapter().getCount() - 1) {
+                        pager.setCurrentItem(pager.getCurrentItem() + 1, true);
+                    } else {
                         pager.setCurrentItem(0);
                     }
                 }
@@ -532,13 +503,11 @@ public class Fragment_Client_Store extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (timer!=null)
-        {
+        if (timer != null) {
             timer.purge();
             timer.cancel();
         }
-        if (timerTask!=null)
-        {
+        if (timerTask != null) {
             timerTask.cancel();
         }
     }
@@ -546,9 +515,10 @@ public class Fragment_Client_Store extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==2){
-            if(userModel!=null){
+        if (requestCode == 2) {
+            if (userModel != null) {
                 activity.DisplayFragmentMyOrders();
-            }}
+            }
+        }
     }
 }

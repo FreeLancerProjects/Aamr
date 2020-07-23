@@ -109,6 +109,13 @@
             android:launchMode="singleTask"
             android:taskAffinity=""
             android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity
+            android:name=".activities_fragments.about.AboutActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
     </application>
 
 </manifest>

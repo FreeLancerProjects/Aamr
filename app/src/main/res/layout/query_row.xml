@@ -22,6 +22,7 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="14sp"
+        android:padding="10dp"
         android:layout_gravity="center_vertical"
         />
     <ImageView
@@ -33,5 +34,6 @@
         android:padding="8dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:visibility="gone"
         />
 </LinearLayout>

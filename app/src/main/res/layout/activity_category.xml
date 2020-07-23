@@ -290,6 +290,7 @@
                         android:layout_marginTop="5dp"
                         android:gravity="center"
                         android:text="@string/user_opinions"
+                        android:visibility="gone"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -305,6 +306,7 @@
                         android:longClickable="false"
                         android:layout_marginTop="5dp"
                         android:padding="8dp"
+                        android:visibility="gone"
                         android:src="@drawable/ic_left_arrow"
                         android:tint="@color/black" />
                 </LinearLayout>

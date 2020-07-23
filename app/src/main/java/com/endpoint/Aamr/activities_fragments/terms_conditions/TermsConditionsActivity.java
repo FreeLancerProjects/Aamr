@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 
 import com.endpoint.Aamr.R;
 import com.endpoint.Aamr.language.Language_Helper;
+import com.endpoint.Aamr.tags.Tags;
 
 import io.paperdb.Paper;
 
@@ -83,11 +84,11 @@ public class TermsConditionsActivity extends AppCompatActivity {
 
     private void updateTermsContent() {
         if (current_lang.equals("ar")) {
-            url = "http://quick.com.sa/Web/appDetails?type=3&lang=ar";
+            url = Tags.base_url+ "Web/appDetails?type=3&lang=ar";
             tv_title.setText("الشروط والأحكام");
 
         } else {
-            url="http://quick.com.sa/Web/appDetails?type=3&lang=en";
+            url=Tags.base_url+"Web/appDetails?type=3&lang=en";
             tv_title.setText("Terms & Condition");
         }
     }

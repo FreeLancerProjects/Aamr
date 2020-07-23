@@ -92,7 +92,7 @@
     <string name="view_in_map">View in map</string>
     <string name="km">Km</string>
     <string name="nearby">nearby</string>
-    <string name="florist">florist</string>
+    <string name="florist">florist and roses</string>
     <string name="bakery">bakery</string>
     <string name="supermarket">supermarket</string>
     <string name="cafe">cafe</string>
@@ -324,5 +324,15 @@
     <string name="you_cant">You Can,t Charge Zero</string>
     <string name="bank_account_number">Bank Account Number</string>
     <string name="place_name">place name</string>
-
+    <string name="library">Library</string>
+    <string name="gas_station">Gas Sation</string>
+    <string name="social_media">Social  Media</string>
+    <string name="not_av">Not Available now</string>
+    <string name="contact_email_address">Connect with us on Web</string>
+    <string name="contact_instgram">Connect with us on Instgram</string>
+    <string name="contact_twitter">Connect with us on Twitter</string>
+    <string name="contact_facebook">Connect with us on Facebook</string>
+    <string name="contact_whats">Connect with us on whats Up</string>
+    <string name="contact_snap">Connect with us on Snap chat</string>
+    <string name="blog">blog</string>
 </resources>

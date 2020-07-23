@@ -34,7 +34,7 @@
     <string name="message">الرسالة</string>
     <string name="send">إرسال</string>
     <string name="update">تعديل</string>
-    <string name="contact_us">إتصل بنا</string>
+    <string name="contact_us">تواصل معنا</string>
     <string name="delete">حذف</string>
 
     <string name="update_password">تعديل كلمة المرور</string>
@@ -89,7 +89,7 @@
     <string name="view_in_map">إطلع على الخريطة</string>
     <string name="km">كم</string>
     <string name="nearby">الاقرب</string>
-    <string name="florist">هدايا</string>
+    <string name="florist">هدايا وورود</string>
     <string name="bakery">حلويات</string>
     <string name="supermarket">سوبرماركت</string>
     <string name="cafe">كافيهات</string>
@@ -292,7 +292,7 @@
     <string name="active1">نشط</string>
     <string name="inactive1">غير نشط</string>
     <string name="all">الكل </string>
-    <string name="pharmacies">Pharmacies</string>
+    <string name="pharmacies">صيدليات</string>
     <string name="change">تغيير</string>
     <string name="display_times">أوقات العرض</string>
     <string name="user_reviews">تقييمات المستخدمين</string>
@@ -321,5 +321,15 @@
     <string name="you_cant">لا يمكنك ان تشحن بقيمه صفر</string>
     <string name="bank_account_number">رقم الحساب البنكى</string>
     <string name="place_name">اسم المكان</string>
-
+    <string name="library">مستلزمات مكتبيه</string>
+    <string name="gas_station">غاز</string>
+    <string name="social_media">وسائل التواصل</string>
+    <string name="not_av">غير متاح حاليا</string>
+    <string name="contact_email_address">تواصل معنا عبر الموقع الالكترونى</string>
+    <string name="contact_instgram">تواصل معنا عبر الأنستجرام</string>
+    <string name="contact_twitter">تواصل معنا عبر تويتر</string>
+    <string name="contact_facebook">تواصل معنا عبر الفيس بوك</string>
+    <string name="contact_whats">تواصل معنا عبر الواتس اب</string>
+    <string name="contact_snap">تواصل معنا عبر سناب شات</string>
+    <string name="blog">التواصل الاجتماعى</string>
 </resources>

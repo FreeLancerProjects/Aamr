@@ -67,11 +67,12 @@ public class Fragment_Home extends Fragment {
 
     public void setimage() {
         userModel = preferences.getUserData(activity);
+
         if (userModel != null) {
             bottomNavigationView.setItemIconTintList(null); // this is important
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                bottomNavigationView.getMenu().getItem(3).setIconTintList(null);
-                bottomNavigationView.getMenu().getItem(3).setIconTintMode(null);
+                bottomNavigationView.getMenu().getItem(4).setIconTintList(null);
+                bottomNavigationView.getMenu().getItem(4).setIconTintMode(null);
             }
             Log.e("lflgllg", userModel.getData().getUser_image());
             Glide.with(getApplicationContext()).asBitmap().load(Tags.IMAGE_URL + userModel.getData().getUser_image())
@@ -105,7 +106,7 @@ public class Fragment_Home extends Fragment {
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
 
         final View iconView =
-                menuView.getChildAt(3).findViewById(com.google.android.material.R.id.icon);
+                menuView.getChildAt(4).findViewById(com.google.android.material.R.id.icon);
         final ViewGroup.LayoutParams layoutParams =
                 iconView.getLayoutParams();
         final DisplayMetrics displayMetrics =
@@ -187,11 +188,11 @@ public class Fragment_Home extends Fragment {
 
 
                         break;
-//                    case R.id.blog:
-//
-//                            activity.DisplayFragmentBlog();
-//
-//                        break;
+                    case R.id.blog:
+
+                        activity.DisplayFragmentBlog();
+
+                        break;
                     case R.id.profile:
                         if (userModel == null) {
                             Common.CreateUserNotSignInAlertDialog(activity);
@@ -244,12 +245,12 @@ public class Fragment_Home extends Fragment {
 
 
                         break;
-//                    case 4:
-//
-//                            activity.DisplayFragmentBlog();
-//
-//                        break;
                     case 4:
+
+                        activity.DisplayFragmentBlog();
+
+                        break;
+                    case 5:
                         if (userModel == null) {
                             Common.CreateUserNotSignInAlertDialog(activity);
                         } else {
@@ -269,7 +270,7 @@ public class Fragment_Home extends Fragment {
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(getString(R.string.stores), R.drawable.ic_nav_store);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(getString(R.string.shipment), R.drawable.ic_box);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem(getString(R.string.my_orders), R.drawable.ic_nav_order);
-       // AHBottomNavigationItem item4 = new AHBottomNavigationItem(getString(R.string.notifications), R.drawable.ic_nav_notification);
+        // AHBottomNavigationItem item4 = new AHBottomNavigationItem(getString(R.string.notifications), R.drawable.ic_nav_notification);
         AHBottomNavigationItem item4 = new AHBottomNavigationItem(getString(R.string.profile), R.drawable.ic_nav_user);
 
         ah_bottom_nav.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
@@ -282,7 +283,7 @@ public class Fragment_Home extends Fragment {
         ah_bottom_nav.addItem(item2);
         ah_bottom_nav.addItem(item3);
         ah_bottom_nav.addItem(item4);
-      //  ah_bottom_nav.addItem(item5);
+        //  ah_bottom_nav.addItem(item5);
 
     }
 
