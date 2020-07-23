@@ -182,9 +182,9 @@ public class CategoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent=new Intent(CategoryActivity.this, ReviewsActivity.class);
-                intent.putExtra("datas",data);
-                startActivityForResult(intent,2);
+//                Intent intent=new Intent(CategoryActivity.this, ReviewsActivity.class);
+//                intent.putExtra("datas",data);
+//                startActivityForResult(intent,2);
 
             }
         });

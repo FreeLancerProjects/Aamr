@@ -251,7 +251,6 @@
                         android:textSize="14sp"
                         android:clickable="false"
                         android:longClickable="false"
-                        android:visibility="gone"
                         />
 
                     <ImageView
@@ -280,6 +279,7 @@
                         android:textSize="14sp"
                         app:layout_constraintEnd_toStartOf="@id/arrow2"
                         android:clickable="false"
+                        android:visibility="gone"
                         android:longClickable="false"
 
                         />
