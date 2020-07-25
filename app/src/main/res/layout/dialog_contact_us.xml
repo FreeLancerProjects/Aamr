@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="15sp"
-            android:text="@string/full_name"
+            android:text="@string/phone"
             />
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,21 +59,21 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/colorPrimary"
                 android:gravity="center"
-                android:src="@drawable/user"
+                android:src="@drawable/ic_phone"
                 android:padding="8dp"
                 android:tint="@color/colorPrimary"
                 />
 
                 <EditText
-                    android:id="@+id/edt_name"
+                    android:id="@+id/edt_phone"
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
                     android:layout_gravity="center_vertical"
                     android:background="@color/white"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:inputType="text"
-                    android:hint="@string/full_name"
+                    android:inputType="phone"
+                    android:hint="@string/phone"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray3"
@@ -88,6 +88,7 @@
             android:textSize="15sp"
             android:text="@string/email_address"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             />
         <LinearLayout
             android:layout_width="match_parent"
@@ -97,6 +98,7 @@
             android:orientation="horizontal"
             android:layout_marginTop="5dp"
             android:background="@drawable/edt_contact_bg"
+            android:visibility="gone"
 
 
             >

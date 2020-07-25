@@ -468,6 +468,13 @@ public interface Service {
             @Field("order_id") String order_id,
             @Field("bill_amount") String bill_amount
     );
+
+    @FormUrlEncoded
+    @POST("/api/contact")
+    Call<ResponseBody> contactus(@Field("message") String message,
+                                 @Field("phone") String phone
+
+    );
 }
 
 

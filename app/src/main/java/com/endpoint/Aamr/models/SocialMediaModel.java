@@ -11,6 +11,8 @@ public class SocialMediaModel implements Serializable {
     private String company_snapchat;
     private String company_whatsapp;
     private String company_emails;
+    private String company_website;
+
     private int network_per;
 
     public int getNetwork_per() {
@@ -43,5 +45,9 @@ public class SocialMediaModel implements Serializable {
 
     public String getCompany_emails() {
         return company_emails;
+    }
+
+    public String getCompany_website() {
+        return company_website;
     }
 }

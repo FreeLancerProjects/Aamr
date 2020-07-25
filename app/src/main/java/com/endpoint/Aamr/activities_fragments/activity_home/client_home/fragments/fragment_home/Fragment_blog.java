@@ -89,15 +89,21 @@ public class Fragment_blog extends Fragment {
         imgEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("message/rfc822");
-                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{email});
-                i.putExtra(Intent.EXTRA_SUBJECT, "Fast One");
-                i.putExtra(Intent.EXTRA_TEXT   , "body of email");
+//                Intent i = new Intent(Intent.ACTION_SEND);
+//                i.setType("message/rfc822");
+//                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{email});
+//                i.putExtra(Intent.EXTRA_SUBJECT, "Fast One");
+//                i.putExtra(Intent.EXTRA_TEXT   , "body of email");
+//                try {
+//                    startActivity(Intent.createChooser(i, "Send mail..."));
+//                } catch (android.content.ActivityNotFoundException ex) {
+//                    Toast.makeText(getContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+//                }
                 try {
-                    startActivity(Intent.createChooser(i, "Send mail..."));
-                } catch (android.content.ActivityNotFoundException ex) {
-                    Toast.makeText(getContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(email));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(email)));
                 }
             }
         });
@@ -189,7 +195,7 @@ public class Fragment_blog extends Fragment {
                             telegram = response.body().getCompany_telegram();
                             snapchat = response.body().getCompany_snapchat();
                             whats = response.body().getCompany_whatsapp();
-                            email=response.body().getCompany_emails();
+                            email=response.body().getCompany_website();
 
 
                         } else {

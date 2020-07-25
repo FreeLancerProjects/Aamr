@@ -2,6 +2,7 @@ package com.endpoint.Aamr.activities_fragments.activity_home.client_home.activit
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -2232,8 +2233,9 @@ fragment_client_orders.getOrders();                             }
                 //create dialog to open_gps
             }
         }
+        if(resultCode== Activity.RESULT_OK){
 if(fragment_client_orders!=null&&fragment_client_orders.isAdded()){
-    fragment_client_orders.getOrders();
+    fragment_client_orders.getOrders();}
 
 }
 

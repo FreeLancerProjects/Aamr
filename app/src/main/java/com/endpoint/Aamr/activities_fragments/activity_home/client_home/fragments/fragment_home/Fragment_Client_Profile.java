@@ -1,14 +1,17 @@
 package com.endpoint.Aamr.activities_fragments.activity_home.client_home.fragments.fragment_home;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import com.endpoint.Aamr.R;
 import com.endpoint.Aamr.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
+import com.endpoint.Aamr.activities_fragments.activity_sign_in.activity.SignInActivity;
 import com.endpoint.Aamr.activities_fragments.telr_activity.TelrActivity;
 import com.endpoint.Aamr.models.PayPalLinkModel;
 import com.endpoint.Aamr.models.SocialMediaModel;
@@ -40,13 +44,14 @@ import java.util.Currency;
 import java.util.Locale;
 
 import io.paperdb.Paper;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Fragment_Client_Profile extends Fragment {
 
-    private ImageView image_logout, image, arrow, arrow2, arrow3, arrow13, image_instagram, image_facebook, image_twitter, img_certified,imagetelegram;
+    private ImageView image_logout, image, arrow, arrow2, arrow3, arrow13, image_instagram, image_facebook, image_twitter, img_certified, imagetelegram;
     private TextView tv_name, tv_balance, tv_order_count, tv_feedback, tv_certified, tv_coupons, tv_contactus;
     private SimpleRatingBar rateBar;
     private ConstraintLayout cons_setting, cons_balance, cons_register_delegate, cons_comment, cons_add_coupon, cons_banks, cons_pay;
@@ -81,9 +86,9 @@ public class Fragment_Client_Profile extends Fragment {
         arrow2 = view.findViewById(R.id.arrow2);
         arrow3 = view.findViewById(R.id.arrow3);
         arrow13 = view.findViewById(R.id.arrow13);
-        imagetelegram=view.findViewById(R.id.imagetelegram);
+        imagetelegram = view.findViewById(R.id.imagetelegram);
         tv_contactus = view.findViewById(R.id.tv_contact);
-        if(userModel!=null&&userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)){
+        if (userModel != null && userModel.getData().getUser_type().equals(Tags.TYPE_CLIENT)) {
             tv_contactus.setText(activity.getResources().getString(R.string.contact_us));
             imagetelegram.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_phone));
         }
@@ -249,16 +254,101 @@ public class Fragment_Client_Profile extends Fragment {
                 startActivity(intent);*/
 
                 try {
-
-                    Intent telegramIntent = new Intent(Intent.ACTION_VIEW);
-                    telegramIntent.setData(Uri.parse("http://telegram.me/" + telegram));
-                    startActivity(telegramIntent);
+                    if (userModel != null && userModel.getData().getUser_type() == Tags.TYPE_DELEGATE) {
+                        Intent telegramIntent = new Intent(Intent.ACTION_VIEW);
+                        telegramIntent.setData(Uri.parse("http://telegram.me/" + telegram));
+                        startActivity(telegramIntent);
+                    } else {
+                        CreateContactusDialog();
+                    }
 
                 } catch (Exception e) {
                     // show error message
                 }
             }
         });
+
+    }
+
+    public void CreateContactusDialog() {
+
+
+        final android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(activity)
+                .setCancelable(true)
+                .create();
+
+
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_contact_us, null);
+        Button btn_send = view.findViewById(R.id.btn_send);
+
+        EditText edt_phone = view.findViewById(R.id.edt_phone);
+        EditText edt_msg = view.findViewById(R.id.edt_msg);
+
+        edt_phone.setText(userModel.getData().getUser_phone_code().replace("+", "00") + userModel.getData().getUser_phone());
+        btn_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //   dialog.dismiss();
+                //  activity.FollowOrder();
+                String phone = edt_phone.getText().toString();
+                String msg = edt_msg.getText().toString();
+                if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(msg)) {
+                    contact(phone, msg, dialog);
+                } else {
+                    if (TextUtils.isEmpty(phone)) {
+                        edt_phone.setError(activity.getResources().getString(R.string.field_req));
+                    }
+                    if (TextUtils.isEmpty(msg)) {
+                        edt_msg.setError(activity.getResources().getString(R.string.field_req));
+                    }
+                }
+
+
+            }
+        });
+
+
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setView(view);
+        dialog.show();
+    }
+
+    public void contact(String phone, String msg, android.app.AlertDialog dialog1) {
+
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
+        dialog.show();
+        Api.getService(Tags.base_url)
+                .contactus(msg, phone)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful()) {
+                            dialog1.dismiss();
+                            Toast.makeText(activity, activity.getResources().getString(R.string.suc), Toast.LENGTH_LONG).show();
+
+                        } else {
+                            try {
+                                Log.e("error", response.code() + "" + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (response.code() == 422) {
+                                Common.CreateSignAlertDialog(activity, getString(R.string.inc_em_phone));
+                            } else {
+                                Common.CreateSignAlertDialog(activity, getString(R.string.failed));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        dialog.dismiss();
+                        Log.e("error", t.toString());
+
+                    }
+                });
 
     }
 

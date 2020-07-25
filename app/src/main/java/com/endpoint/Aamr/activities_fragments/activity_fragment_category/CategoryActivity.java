@@ -612,6 +612,8 @@ public class CategoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dialog.dismiss();
                 //  activity.FollowOrder();
+                Intent intent=getIntent();
+                setResult(Activity.RESULT_OK, intent);
                 finish();
 
 
