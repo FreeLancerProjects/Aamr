@@ -13,8 +13,7 @@
         android:focusable="true"
 
         app:layout_constraintBottom_toTopOf="@id/fab"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
@@ -74,6 +73,7 @@
 
                         />
                 </FrameLayout>
+
                 <androidx.appcompat.widget.Toolbar
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
@@ -153,9 +153,9 @@
                                     android:layout_marginTop="5dp"
                                     android:gravity="center"
                                     android:text="name"
-                                    android:visibility="gone"
                                     android:textColor="@color/colorPrimary"
                                     android:textSize="14sp"
+                                    android:visibility="gone"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@id/image"
@@ -192,6 +192,7 @@
                 android:paddingRight="10dp"
 
                 >
+
                 <TextView
                     android:id="@+id/tv_content"
                     android:layout_width="wrap_content"
@@ -207,6 +208,7 @@
 
 
                     />
+
                 <LinearLayout
                     android:id="@+id/ll_review"
                     android:layout_width="match_parent"
@@ -286,13 +288,13 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
                         android:gravity="center"
                         android:text="@string/user_opinions"
-                        android:visibility="gone"
                         android:textColor="@color/black"
                         android:textSize="14sp"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/image" />
@@ -302,11 +304,102 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
                         android:clickable="false"
                         android:longClickable="false"
-                        android:layout_marginTop="5dp"
                         android:padding="8dp"
-                        android:visibility="gone"
+                        android:src="@drawable/ic_left_arrow"
+                        android:tint="@color/black"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_changeadd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:clickable="false"
+                        android:longClickable="false"
+                        android:padding="8dp"
+                        android:src="@drawable/map"
+                        app:civ_circle_background_color="@color/gray4"
+                        app:civ_fill_color="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_addresss1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:text="@string/delived_location"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/image" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_address2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:gravity="center"
+                                android:lines="1"
+                                android:text="@string/address"
+                                android:textColor="@color/gray3"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center"
+                        android:text="@string/change"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/image" />
+
+                    <ImageView
+                        android:id="@+id/arrow2"
+
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:clickable="false"
+                        android:longClickable="false"
+
+                        android:padding="8dp"
                         android:src="@drawable/ic_left_arrow"
                         android:tint="@color/black" />
                 </LinearLayout>
@@ -326,8 +419,8 @@
                         android:longClickable="false"
                         android:padding="8dp"
                         android:src="@drawable/map"
-                        app:civ_fill_color="@color/black"
-                        app:civ_circle_background_color="@color/gray4" />
+                        app:civ_circle_background_color="@color/gray4"
+                        app:civ_fill_color="@color/black" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -362,8 +455,8 @@
                                 android:layout_gravity="center"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
-                                android:lines="1"
                                 android:gravity="center"
+                                android:lines="1"
                                 android:text="@string/address"
                                 android:textColor="@color/gray3"
                                 android:textSize="14sp"
@@ -380,8 +473,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
                         android:gravity="center"
                         android:text="@string/change"
                         android:textColor="@color/black"
@@ -396,9 +489,9 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
                         android:clickable="false"
                         android:longClickable="false"
-                        android:layout_marginTop="5dp"
 
                         android:padding="8dp"
                         android:src="@drawable/ic_left_arrow"
@@ -472,8 +565,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
 
                         android:gravity="center"
                         android:text="@string/display_times"
@@ -490,9 +583,9 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
                         android:clickable="false"
                         android:longClickable="false"
-                        android:layout_marginTop="5dp"
                         android:padding="8dp"
                         android:src="@drawable/ic_left_arrow"
                         android:tint="@color/black" />
@@ -504,8 +597,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="8dp"
                     android:background="@color/transparent"
                     android:gravity="center_vertical"
                     android:hint="@string/more_detials"
@@ -519,40 +612,41 @@
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray3"
                     android:textSize="14sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintTop_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/image_upload_image"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
 
 
                     />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray4"
-                    />
+                    android:background="@color/gray4" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cons_add_coupon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="25dp"
-                    android:paddingRight="25dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
                     android:background="@color/white"
-                    app:layout_constraintTop_toBottomOf="@+id/view3"
+                    android:paddingLeft="25dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="25dp"
+                    android:paddingBottom="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    >
+                    app:layout_constraintTop_toBottomOf="@+id/view3">
+
                     <ImageView
                         android:id="@+id/coupon"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        android:padding="3dp"
                         android:src="@drawable/ic_coupon"
                         android:tint="@color/active"
-                        android:padding="3dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
 
                         />
 
@@ -565,6 +659,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/coupon"
                         app:layout_constraintStart_toEndOf="@id/coupon" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <ImageView
                     android:id="@+id/image_details"
                     android:layout_width="match_parent"
@@ -576,14 +671,14 @@
 
         </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fab"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/fab">
 
         <Button
             android:id="@+id/btnOrderNow"
@@ -596,19 +691,19 @@
             android:textSize="15sp" />
 
     </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="15dp"
+        android:layout_marginBottom="170dp"
         android:src="@drawable/ic_camera"
         app:borderWidth="3dp"
-        app:pressedTranslationZ="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/ll"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/co"
-        app:layout_constraintBottom_toTopOf="@+id/ll"
-        android:layout_marginBottom="170dp"
-        />
+        app:pressedTranslationZ="8dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

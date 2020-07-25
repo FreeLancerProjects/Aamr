@@ -1,6 +1,7 @@
 package com.endpoint.Aamr.activities_fragments.activity_home.client_home.fragments.fragment_home;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.location.Location;
@@ -515,7 +516,7 @@ public class Fragment_Client_Store extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2) {
+        if (requestCode == 2&&resultCode== Activity.RESULT_OK) {
             if (userModel != null) {
                 activity.DisplayFragmentMyOrders();
             }

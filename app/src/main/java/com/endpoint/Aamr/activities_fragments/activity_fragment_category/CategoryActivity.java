@@ -76,7 +76,7 @@ import retrofit2.Response;
 public class CategoryActivity extends AppCompatActivity {
     private CategoryModel.Data data;
     private String lang;
-    private TextView tv_name, tv_content, tv_rate, tv_addess, tv_address, tv_time, tv_status;
+    private TextView tv_name, tv_content, tv_rate, tv_addess, tv_address, tv_time, tv_status,tv_addess2,tv_addresss1;
     private CircleImageView imageView;
     private ImageView image_details;
     private SimpleRatingBar simpleRatingBar;
@@ -86,8 +86,8 @@ public class CategoryActivity extends AppCompatActivity {
     private TabLayout tab;
     private int current_page = 0, NUM_PAGES;
     private SliderCatogryAdapter sliderCatogryAdapter;
-    private LinearLayout ll_change,ll_choose_delivery_time;
-    private SelectedLocation selectedLocation;
+    private LinearLayout ll_change,ll_choose_delivery_time,ll_changeadd;
+    private SelectedLocation selectedLocation,selectedLocation1;
     private ImageView arrow1, arrow2, arrow3, imback;
     private ProgressBar progressBar;
     private Button btnOrderNow;
@@ -148,8 +148,13 @@ public class CategoryActivity extends AppCompatActivity {
         imageView = findViewById(R.id.image);
         pager = findViewById(R.id.pager);
         ll_change = findViewById(R.id.ll_change);
+        ll_changeadd = findViewById(R.id.ll_changeadd);
+
         ll_choose_delivery_time=findViewById(R.id.ll_time);
         tv_addess = findViewById(R.id.tv_address);
+        tv_addresss1=findViewById(R.id.tv_addresss1);
+        tv_addess2 = findViewById(R.id.tv_address2);
+
         fab = findViewById(R.id.fab);
         tv_address = findViewById(R.id.tv_address1);
         edt_order_details = findViewById(R.id.edt_order_details);
@@ -225,7 +230,13 @@ public class CategoryActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
-
+        ll_changeadd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CategoryActivity.this, MapActivity.class);
+                startActivityForResult(intent, 130);
+            }
+        });
         btnOrderNow.setOnClickListener(view -> {
 //            Intent intent = new Intent(CategoryActivity.this, CompleteOrderActivity.class);
 //            startActivity(intent);
@@ -246,7 +257,7 @@ public class CategoryActivity extends AppCompatActivity {
     private void CheckData() {
 
         order_details = edt_order_details.getText().toString().trim();
-        if(!TextUtils.isEmpty(order_details)&&selectedLocation!=null&&!selectedLocation.getAddress().isEmpty()&&selected_time!=0)
+        if(!TextUtils.isEmpty(order_details)&&selectedLocation!=null&&!selectedLocation.getAddress().isEmpty()&&selected_time!=0&&selectedLocation!=null&&!selectedLocation1.getAddress().isEmpty())
 
         {
             edt_order_details.setError(null);
@@ -296,6 +307,17 @@ public class CategoryActivity extends AppCompatActivity {
             }
             else {
                 tv_address.setError(null);
+            }
+            if (selectedLocation1 == null) {
+                tv_addresss1.setError(getString(R.string.field_req));
+
+            }
+            else if(selectedLocation1.getAddress().isEmpty()){
+                tv_addresss1.setError(getString(R.string.field_req));
+
+            }
+            else {
+                tv_addresss1.setError(null);
             }
         }    }
     private void getdatafromintent() {
@@ -468,7 +490,7 @@ public class CategoryActivity extends AppCompatActivity {
         final ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.wait));
         dialog.show();
         Api.getService(Tags.base_url)
-                .sendOrder(userModel.getData().getUser_id(),selectedLocation.getAddress()+" "+selectedLocation.getAddress(),selectedLocation.getLat(),selectedLocation.getLng(),order_details,singlecategory.getData().get(0).getPlace_id()+"",singlecategory.getData().get(0).getAddress(),"1",singlecategory.getData().get(0).getGoogle_lat(),singlecategory.getData().get(0).getGoogle_long(),selected_time,coupon_id+"",singlecategory.getData().get(0).getCategory_id())
+                .sendOrder(userModel.getData().getUser_id(),selectedLocation.getAddress()+" "+selectedLocation.getAddress(),selectedLocation.getLat(),selectedLocation.getLng(),order_details,singlecategory.getData().get(0).getPlace_id()+"",selectedLocation1.getAddress(),"1",selectedLocation1.getLat(),selectedLocation1.getLng(),selected_time,coupon_id+"",singlecategory.getData().get(0).getCategory_id())
                 .enqueue(new Callback<OrderIdDataModel>() {
                     @Override
                     public void onResponse(Call<OrderIdDataModel> call, Response<OrderIdDataModel> response) {
@@ -512,6 +534,15 @@ public class CategoryActivity extends AppCompatActivity {
                     }}
             }
         }
+        else    if (requestCode == 130 && resultCode == RESULT_OK && data != null) {
+            if (data.hasExtra("location")) {
+                selectedLocation1 = (SelectedLocation) data.getSerializableExtra("location");
+                if (selectedLocation1 != null) {
+                    if(selectedLocation1.getAddress()!=null&&!selectedLocation1.getAddress().isEmpty()){
+                        tv_addess2.setText(selectedLocation1.getAddress());
+                        tv_addess2.setText(selectedLocation1.getAddress().substring(0,selectedLocation1.getAddress().length()/2 ));
+                    }}
+            }}
         else if(requestCode==2){
             userModel=preference.getUserData(this);
         }
@@ -770,10 +801,10 @@ public class CategoryActivity extends AppCompatActivity {
         RequestBody place_id_part = Common.getRequestBodyText(singlecategory.getData().get(0).getPlace_id()+"");
         RequestBody place_name_part = Common.getRequestBodyText(singlecategory.getData().get(0).getCategory_id()+"");
 
-        RequestBody place_address_part = Common.getRequestBodyText(selectedLocation.getAddress());
+        RequestBody place_address_part = Common.getRequestBodyText(selectedLocation1.getAddress());
         RequestBody order_type_part = Common.getRequestBodyText("1");
-        RequestBody place_lat_part = Common.getRequestBodyText(String.valueOf(selectedLocation.getLat()));
-        RequestBody place_lng_part = Common.getRequestBodyText(String.valueOf(selectedLocation.getLng()));
+        RequestBody place_lat_part = Common.getRequestBodyText(String.valueOf(selectedLocation1.getLat()));
+        RequestBody place_lng_part = Common.getRequestBodyText(String.valueOf(selectedLocation1.getLng()));
         RequestBody selected_time_part = Common.getRequestBodyText(String.valueOf(selected_time));
         MultipartBody.Part image_part = Common.getMultiPart(this,uri,"order_image");
         RequestBody copun_part = Common.getRequestBodyText(coupon_id+"");
