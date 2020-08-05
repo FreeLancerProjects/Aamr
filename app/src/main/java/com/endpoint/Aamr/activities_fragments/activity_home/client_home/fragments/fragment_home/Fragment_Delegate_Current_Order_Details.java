@@ -223,6 +223,7 @@ public class Fragment_Delegate_Current_Order_Details extends Fragment {
             Picasso.with(activity).load(Uri.parse(Tags.IMAGE_URL+order.getOrder_image())).fit().into(order_image);
             order_image.setVisibility(View.VISIBLE);
 
+
         }
 
         if (order.getOrder_type().equals("1"))
@@ -275,8 +276,6 @@ public class Fragment_Delegate_Current_Order_Details extends Fragment {
                // image_bill.setVisibility(View.GONE);
                 activity.refresh();
                 break;
-
-
 
         }
 
