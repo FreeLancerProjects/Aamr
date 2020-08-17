@@ -2421,7 +2421,7 @@ if(fragment_client_orders!=null&&fragment_client_orders.isAdded()){
                         public void run() {
                             if (canUpdateLocation) {
                                 canUpdateLocation = false;
-                                fragment_client_store.getNearbyPlaces(location, "restaurant");
+                                fragment_client_store.getNearbyPlaces(location, "restaurant",0);
 
                             }
                             /*if (intentService!=null)

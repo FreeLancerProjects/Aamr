@@ -88,7 +88,7 @@ public class CategoryActivity extends AppCompatActivity {
     private SliderCatogryAdapter sliderCatogryAdapter;
     private LinearLayout ll_change, ll_choose_delivery_time, ll_changeadd;
     private SelectedLocation selectedLocation, selectedLocation1;
-    private ImageView arrow1, arrow2, arrow3, arrow4, imback;
+    private ImageView arrow1, arrow2, arrow3, arrow8, imback;
     private ProgressBar progressBar;
     private Button btnOrderNow;
     public Location location = null;
@@ -162,7 +162,7 @@ public class CategoryActivity extends AppCompatActivity {
         arrow1 = findViewById(R.id.arrow1);
         arrow2 = findViewById(R.id.arrow2);
         arrow3 = findViewById(R.id.arrow3);
-        arrow4 = findViewById(R.id.arrow4);
+        arrow8 = findViewById(R.id.arrow8);
 
         imback = findViewById(R.id.image_back);
         progressBar = findViewById(R.id.progBarSlider);
@@ -206,7 +206,7 @@ public class CategoryActivity extends AppCompatActivity {
             arrow1.setRotation(180.0f);
             arrow2.setRotation(180.0f);
             arrow3.setRotation(180.0f);
-            arrow4.setRotation(180.0f);
+            arrow8.setRotation(180.0f);
 
         } else {
             imback.setRotation(180.0f);
