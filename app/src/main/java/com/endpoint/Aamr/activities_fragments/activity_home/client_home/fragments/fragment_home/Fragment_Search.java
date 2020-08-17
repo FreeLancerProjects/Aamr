@@ -247,7 +247,7 @@ public class Fragment_Search extends Fragment
 
 
         String loc = lat+","+lng;
-
+Log.e("mmmmm","https://maps.googleapis.com/maps/api/place/nearbysearch/json"+loc+"5000"+query+current_language+getString(R.string.map_api_key));
         Api.getService("https://maps.googleapis.com/maps/api/")
                 .getNearbySearchStores(loc,5000,query,current_language,getString(R.string.map_api_key))
                 .enqueue(new Callback<NearbyStoreDataModel>() {

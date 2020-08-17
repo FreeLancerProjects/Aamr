@@ -484,7 +484,7 @@
                         app:layout_constraintTop_toBottomOf="@id/image" />
 
                     <ImageView
-                        android:id="@+id/arrow2"
+                        android:id="@+id/arrow8"
 
                         android:layout_width="30dp"
                         android:layout_height="30dp"
