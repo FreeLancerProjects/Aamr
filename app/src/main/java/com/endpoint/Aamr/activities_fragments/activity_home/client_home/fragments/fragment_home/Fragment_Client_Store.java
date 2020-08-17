@@ -332,7 +332,7 @@ public class Fragment_Client_Store extends Fragment {
 
 
     @SuppressLint("MissingPermission")
-    public void getNearbyPlaces(final Location location, String query) {
+    public void getNearbyPlaces(final Location location, String query, int i) {
         getAds();
         progBar.setVisibility(View.VISIBLE);
         cardView.setVisibility(View.VISIBLE);
@@ -357,7 +357,7 @@ public class Fragment_Client_Store extends Fragment {
                                 progBar.setVisibility(View.GONE);
                                 if (response.body().getResults().size() > 0) {
                                     ll_no_store.setVisibility(View.GONE);
-                                    updateUi(response.body(), location);
+                                    updateUi(response.body(), location,i);
                                 } else {
                                     ll_no_store.setVisibility(View.VISIBLE);
 
@@ -395,7 +395,7 @@ public class Fragment_Client_Store extends Fragment {
 
     }
 
-    private void updateUi(NearbyStoreDataModel nearbyStoreDataModel, Location location) {
+    private void updateUi(NearbyStoreDataModel nearbyStoreDataModel, Location location, int i) {
 
 
         LocationModel.setLocation(location);
@@ -413,10 +413,11 @@ public class Fragment_Client_Store extends Fragment {
 
         recViewQueries.setVisibility(View.VISIBLE);
         if (adapter == null) {
-            adapter = new NearbyAdapter(nearbyModelList, activity, this, location.getLatitude(), location.getLongitude());
+            adapter = new NearbyAdapter(nearbyModelList, activity, this, location.getLatitude(), location.getLongitude(),i);
             recView.setAdapter(adapter);
 
         } else {
+            adapter.i=i;
             adapter.notifyDataSetChanged();
         }
 
@@ -469,9 +470,11 @@ public class Fragment_Client_Store extends Fragment {
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
+            String query = queriesList.get(pos);
+            getNearbyPlaces(location, query, pos);
         } else {
             String query = queriesList.get(pos);
-            getNearbyPlaces(location, query);
+            getNearbyPlaces(location, query, pos);
 
         }
     }
