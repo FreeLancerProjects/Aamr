@@ -125,7 +125,7 @@ public class Fragment_blog extends Fragment {
             @Override
             public void onClick(View view) {
                 if (twitter!=null){
-
+Log.e("ktkktkk",twitter);
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(twitter));
                     startActivity(intent);
                 }else
