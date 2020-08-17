@@ -109,32 +109,32 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.MyHolder> 
 //
 //            }
             if (i == 0) {
-                Picasso.with(context).load(R.drawable.flag_ng).fit().into(image);
+                Picasso.with(context).load(R.drawable.restaurant).fit().into(image);
             } else if (i == 1) {
-                Picasso.with(context).load(R.drawable.flag_id).fit().into(image);
+                Picasso.with(context).load(R.drawable.coffee).fit().into(image);
 
             } else if (i == 2) {
-                Picasso.with(context).load(R.drawable.flag_th).fit().into(image);
+                Picasso.with(context).load(R.drawable.pharmacy).fit().into(image);
 
 
             } else if (i == 3) {
-                Picasso.with(context).load(R.drawable.flag_ac).fit().into(image);
+                Picasso.with(context).load(R.drawable.supermarket).fit().into(image);
 
 
             } else if (i == 4) {
-                Picasso.with(context).load(R.drawable.flag_af).fit().into(image);
+                Picasso.with(context).load(R.drawable.desert).fit().into(image);
 
 
             } else if (i == 5) {
-                Picasso.with(context).load(R.drawable.flag_ae).fit().into(image);
+                Picasso.with(context).load(R.drawable.libraytools).fit().into(image);
 
 
             } else if (i == 6) {
-                Picasso.with(context).load(R.drawable.flag_an).fit().into(image);
+                Picasso.with(context).load(R.drawable.floor).fit().into(image);
 
 
             } else if (i == 7) {
-                Picasso.with(context).load(R.drawable.flag_gs).fit().into(image);
+                Picasso.with(context).load(R.drawable.store).fit().into(image);
 
 
             }

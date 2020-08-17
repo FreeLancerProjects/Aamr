@@ -470,6 +470,8 @@ public class Fragment_Client_Store extends Fragment {
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
+            String query = queriesList.get(pos);
+            getNearbyPlaces(location, query, pos);
         } else {
             String query = queriesList.get(pos);
             getNearbyPlaces(location, query, pos);
