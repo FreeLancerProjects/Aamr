@@ -430,29 +430,29 @@ public class Fragment_Reserve_Order extends Fragment {
             }
 
 
-            try {
-                if (placeDetails.getPhotos()!=null)
-                {
-                    if (placeDetails.getPhotos().size()>0)
-                    {
-                        llSlider.setVisibility(View.VISIBLE);
-                        adapter = new SliderStoreDetailsAdapter(placeDetails.getPhotos(),activity);
-                        pager.setAdapter(adapter);
-                        llSlider.setVisibility(View.GONE);
-
-                    }else
-                    {
-                        llSlider.setVisibility(View.GONE);
-                    }
-                }else
-                {
-                    llSlider.setVisibility(View.GONE);
-
-                }
-            }
-            catch (Exception e){
-
-            }
+//            try {
+//                if (placeDetails.getPhotos()!=null)
+//                {
+//                    if (placeDetails.getPhotos().size()>0)
+//                    {
+//                        llSlider.setVisibility(View.VISIBLE);
+//                        adapter = new SliderStoreDetailsAdapter(placeDetails.getPhotos(),activity);
+//                        pager.setAdapter(adapter);
+//                        llSlider.setVisibility(View.GONE);
+//
+//                    }else
+//                    {
+//                        llSlider.setVisibility(View.GONE);
+//                    }
+//                }else
+//                {
+//                    llSlider.setVisibility(View.GONE);
+//
+//                }
+//            }
+//            catch (Exception e){
+//
+//            }
 
 
 
