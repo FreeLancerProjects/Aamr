@@ -1805,8 +1805,9 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 //                                                }, 1000);
                                         Toast.makeText(ClientHomeActivity.this, getResources().getString(R.string.succ_be_courier), Toast.LENGTH_LONG).show();
                                         Intent intent =getIntent();
-                                        startActivity(intent);
                                         finish();
+
+                                        startActivity(intent);
 
                                     }
                                 }
