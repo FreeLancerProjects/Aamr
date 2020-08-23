@@ -416,7 +416,7 @@ Log.e("mmmmm","https://maps.googleapis.com/maps/api/place/nearbysearch/json"+loc
             placeModel.setOpenNow(nearbyModel.getOpening_hours().isOpen_now());
 
         }
-        activity.DisplayFragmentStoreDetails(placeModel, i);
+        activity.DisplayFragmentStoreDetails(placeModel, 0);
     }
 
     private String getUserAddress(double lat, double lng)
