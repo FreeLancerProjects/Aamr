@@ -37,7 +37,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.endpoint.Aamr.R;
 import com.endpoint.Aamr.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
-import com.endpoint.Aamr.activities_fragments.activity_reviews.ReviewsActivity;
 import com.endpoint.Aamr.adapters.SliderStoreDetailsAdapter;
 import com.endpoint.Aamr.models.Favourite_location;
 import com.endpoint.Aamr.models.OrderIdDataModel;
@@ -72,15 +71,16 @@ import retrofit2.Response;
 public class Fragment_Reserve_Order extends Fragment {
     private static final String TAG = "DATA";
     private static final String TAG2 = "DATA2";
+    private static final String TAG3 = "DATA3";
 
     private ClientHomeActivity activity;
-    private ImageView image, arrow,arrow2, image_reserve,image_details;
+    private ImageView image, arrow, arrow2, image_reserve, image_details;
     private TextView tv_place_name, tv_place_address, tv_address;
     private LinearLayout ll_back, ll_delivery_location, ll_fav_address, ll_fav_map_loc, ll_choose_delivery_time;
     private ConstraintLayout cons_add_coupon;
     private CheckBox checkbox;
     private ExpandableLayout expandLayout;
-    private TextView tv_fav_address_title, tv_fav_address, tv_delivery_time,tvRate,tvReview;
+    private TextView tv_fav_address_title, tv_fav_address, tv_delivery_time, tvRate, tvReview;
     private SimpleRatingBar ratingBar;
     private ConstraintLayout consReview;
     private EditText edt_order_details;
@@ -98,16 +98,17 @@ public class Fragment_Reserve_Order extends Fragment {
     private UserModel userModel;
     private PlaceDetailsModel.PlaceDetails placeDetails;
 
-    private final int IMG1=1,IMG2=2;
-    private Uri uri=null;
+    private final int IMG1 = 1, IMG2 = 2;
+    private Uri uri = null;
     private final String read_permission = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private final String camera_permission = Manifest.permission.CAMERA;
 
     ////////////////////////////////////////////////
     private Favourite_location selected_location = null;
-    private long selected_time=0;
-    private String order_details,delegate_id="";
+    private long selected_time = 0;
+    private String order_details, delegate_id = "";
+    private int cat;
 
     @Nullable
     @Override
@@ -117,12 +118,12 @@ public class Fragment_Reserve_Order extends Fragment {
         return view;
     }
 
-    public static Fragment_Reserve_Order newInstance(PlaceModel placeModel, PlaceDetailsModel.PlaceDetails placeDetails) {
+    public static Fragment_Reserve_Order newInstance(PlaceModel placeModel, PlaceDetailsModel.PlaceDetails placeDetails, int cat) {
         Fragment_Reserve_Order fragment_reserve_order = new Fragment_Reserve_Order();
         Bundle bundle = new Bundle();
         bundle.putSerializable(TAG, placeModel);
         bundle.putSerializable(TAG2, placeDetails);
-
+        bundle.putInt(TAG3, cat);
         fragment_reserve_order.setArguments(bundle);
         return fragment_reserve_order;
 
@@ -137,7 +138,7 @@ public class Fragment_Reserve_Order extends Fragment {
         Paper.init(activity);
         current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
 
-        timesList = new String[]{getString(R.string.hour1),getString(R.string.hour2), getString(R.string.hour3),};
+        timesList = new String[]{getString(R.string.hour1), getString(R.string.hour2), getString(R.string.hour3),};
         cons_add_coupon = view.findViewById(R.id.cons_add_coupon);
 
        /* getString(R.string.hour2),
@@ -205,9 +206,6 @@ public class Fragment_Reserve_Order extends Fragment {
         });
 
 
-
-
-
         ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -217,20 +215,15 @@ public class Fragment_Reserve_Order extends Fragment {
         ll_delivery_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (preferences.getFavouriteLocation(activity)!=null)
-                {
+                if (preferences.getFavouriteLocation(activity) != null) {
 
-                    if (expandLayout.isExpanded())
-                    {
+                    if (expandLayout.isExpanded()) {
                         expandLayout.collapse(true);
-                    }else
-                    {
+                    } else {
                         expandLayout.expand(true);
                     }
-                }else
-                {
-                    if (!checkbox.isChecked())
-                    {
+                } else {
+                    if (!checkbox.isChecked()) {
                         activity.DisplayFragmentMap("fragment_reserve_order");
 
                     }
@@ -250,11 +243,10 @@ public class Fragment_Reserve_Order extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (favourite_location!=null)
-                {
+                if (favourite_location != null) {
                     expandLayout.collapse(true);
-                    selected_location = new Favourite_location(favourite_location.getPlace_id(),favourite_location.getName(),favourite_location.getStreet(),favourite_location.getAddress(),favourite_location.getLat(),favourite_location.getLng());
-                    updateSelectedAddress(favourite_location,true);
+                    selected_location = new Favourite_location(favourite_location.getPlace_id(), favourite_location.getName(), favourite_location.getStreet(), favourite_location.getAddress(), favourite_location.getLat(), favourite_location.getLng());
+                    updateSelectedAddress(favourite_location, true);
 
                 }
             }
@@ -287,11 +279,9 @@ public class Fragment_Reserve_Order extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (checkbox.isChecked())
-                {
+                if (checkbox.isChecked()) {
                     DisplayAlertEnterAddressTitle();
-                }else
-                {
+                } else {
                     preferences.ClearFavoriteLocation(activity);
                     expandLayout.collapse(true);
                 }
@@ -309,6 +299,7 @@ public class Fragment_Reserve_Order extends Fragment {
         if (bundle != null) {
             placeModel = (PlaceModel) bundle.getSerializable(TAG);
             placeDetails = (PlaceDetailsModel.PlaceDetails) bundle.getSerializable(TAG2);
+            cat=bundle.getInt(TAG3);
             updateUI(placeModel);
         }
 
@@ -329,12 +320,11 @@ public class Fragment_Reserve_Order extends Fragment {
 
     private void CheckData() {
         order_details = edt_order_details.getText().toString().trim();
-        if(!TextUtils.isEmpty(order_details)&&selected_location!=null&&selected_time!=0)
-        {
+        if (!TextUtils.isEmpty(order_details) && selected_location != null && selected_time != 0) {
             edt_order_details.setError(null);
             tv_delivery_time.setError(null);
             tv_address.setError(null);
-            Common.CloseKeyBoard(activity,edt_order_details);
+            Common.CloseKeyBoard(activity, edt_order_details);
             /*if (TextUtils.isEmpty(delegate_id))
             {
                 activity.DisplayFragmentDelegates(placeModel.getLat(),placeModel.getLng(),"reserve_order","","");
@@ -343,42 +333,33 @@ public class Fragment_Reserve_Order extends Fragment {
                 {
                 }*/
 
-            if (uri==null)
-            {
+            if (uri == null) {
                 sendOrder();
 
-            }else
-            {
+            } else {
                 sendOrderWithImage();
             }
 
 
-        }else
-        {
-            if (TextUtils.isEmpty(order_details))
-            {
+        } else {
+            if (TextUtils.isEmpty(order_details)) {
                 edt_order_details.setError(getString(R.string.field_req));
 
-            }else
-            {
+            } else {
                 edt_order_details.setError(null);
             }
 
-            if (selected_time == 0)
-            {
+            if (selected_time == 0) {
                 tv_delivery_time.setError(getString(R.string.field_req));
 
-            }else
-            {
+            } else {
                 tv_delivery_time.setError(null);
             }
 
-            if (selected_location == null)
-            {
+            if (selected_location == null) {
                 tv_address.setError(getString(R.string.field_req));
 
-            }else
-            {
+            } else {
                 tv_address.setError(null);
             }
         }
@@ -386,48 +367,70 @@ public class Fragment_Reserve_Order extends Fragment {
     }
 
 
-
     private void updateUI(PlaceModel placeModel) {
-        if (placeModel!=null)
-        {
+        if (placeModel != null) {
             tv_place_name.setText(placeModel.getName());
             tv_place_address.setText(placeModel.getAddress());
 
             ratingBar.setRating(placeModel.getRating());
-            tvRate.setText(String.format("%s%s%s","(", String.valueOf(placeModel.getRating()),")"));
+            tvRate.setText(String.format("%s%s%s", "(", String.valueOf(placeModel.getRating()), ")"));
             try {
-                if (placeDetails.getReviews()!=null)
-                {
-                    if (placeDetails.getReviews().size()>0)
-                    {
-                        tvReview.setText(String.format("%s %s", String.valueOf(placeDetails.getReviews().size()),getString(R.string.reviews)));
+                if (placeDetails.getReviews() != null) {
+                    if (placeDetails.getReviews().size() > 0) {
+                        tvReview.setText(String.format("%s %s", String.valueOf(placeDetails.getReviews().size()), getString(R.string.reviews)));
 
-                    }else
-                    {
-                        tvReview.setText(String.format("%s %s","0",getString(R.string.reviews)));
+                    } else {
+                        tvReview.setText(String.format("%s %s", "0", getString(R.string.reviews)));
 
                     }
-                }else
-                {
-                    tvReview.setText(String.format("%s %s","0",getString(R.string.reviews)));
+                } else {
+                    tvReview.setText(String.format("%s %s", "0", getString(R.string.reviews)));
 
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
 
             }
+            if (cat == 0) {
+                Picasso.with(activity).load(R.drawable.restaurant).fit().into(image);
+            } else if (cat == 1) {
+                Picasso.with(activity).load(R.drawable.coffee).fit().into(image);
+
+            } else if (cat == 2) {
+                Picasso.with(activity).load(R.drawable.pharmacy).fit().into(image);
 
 
-            if (placeModel.getPhotosList().size()>0)
-            {
+            } else if (cat == 3) {
+                Picasso.with(activity).load(R.drawable.supermarket).fit().into(image);
 
-                String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+placeModel.getPhotosList().get(0).getPhoto_reference()+"&key=AIzaSyCbc2Y5AIwZ8uUeHRUXiozGN3CnpjKT0oI";
-                Picasso.with(activity).load(Uri.parse(url)).fit().into(image);
-            }else
-            {
-                Picasso.with(activity).load(placeModel.getIcon()).fit().into(image);
+
+            } else if (cat == 4) {
+                Picasso.with(activity).load(R.drawable.desert).fit().into(image);
+
+
+            } else if (cat == 5) {
+                Picasso.with(activity).load(R.drawable.libraytools).fit().into(image);
+
+
+            } else if (cat == 6) {
+                Picasso.with(activity).load(R.drawable.floor).fit().into(image);
+
+
+            } else if (cat == 7) {
+                Picasso.with(activity).load(R.drawable.store).fit().into(image);
+
 
             }
+
+//            if (placeModel.getPhotosList().size()>0)
+//            {
+//
+//                String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+placeModel.getPhotosList().get(0).getPhoto_reference()+"&key=AIzaSyCbc2Y5AIwZ8uUeHRUXiozGN3CnpjKT0oI";
+//                Picasso.with(activity).load(Uri.parse(url)).fit().into(image);
+//            }else
+//            {
+//                Picasso.with(activity).load(placeModel.getIcon()).fit().into(image);
+//
+//            }
 
 
 //            try {
@@ -455,85 +458,73 @@ public class Fragment_Reserve_Order extends Fragment {
 //            }
 
 
-
         }
         favourite_location = preferences.getFavouriteLocation(activity);
 
-        if (favourite_location !=null)
-        {
+        if (favourite_location != null) {
             tv_fav_address_title.setText(favourite_location.getName());
-            tv_fav_address.setText(favourite_location.getStreet()+"\n"+favourite_location.getAddress());
+            tv_fav_address.setText(favourite_location.getStreet() + "\n" + favourite_location.getAddress());
         }
 
     }
 
-    public void updateSelectedAddress(Favourite_location selected_location,boolean checked)
-    {
+    public void updateSelectedAddress(Favourite_location selected_location, boolean checked) {
 
         checkbox.setVisibility(View.VISIBLE);
 
 
-        if (!TextUtils.isEmpty(selected_location.getStreet()))
-        {
-            tv_address.setText(selected_location.getStreet()+"\n"+selected_location.getAddress());
+        if (!TextUtils.isEmpty(selected_location.getStreet())) {
+            tv_address.setText(selected_location.getStreet() + "\n" + selected_location.getAddress());
 
-        }else
-        {
+        } else {
             tv_address.setText(selected_location.getAddress());
 
         }
 
-        if (checked)
-        {
+        if (checked) {
             checkbox.setChecked(true);
 
-        }else
-        {
+        } else {
             checkbox.setChecked(false);
 
         }
     }
 
-    private void DisplayAlertEnterAddressTitle()
-    {
+    private void DisplayAlertEnterAddressTitle() {
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setCancelable(true)
                 .create();
 
-        View view  = LayoutInflater.from(activity).inflate(R.layout.dialog_address_fav,null);
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_address_fav, null);
         TextView tv_address = view.findViewById(R.id.tv_address);
         final EditText edt_name = view.findViewById(R.id.edt_name);
         Button btn_save = view.findViewById(R.id.btn_save);
         Button btn_cancel = view.findViewById(R.id.btn_cancel);
 
-        tv_address.setText(selected_location.getStreet()+"\n"+selected_location.getAddress());
+        tv_address.setText(selected_location.getStreet() + "\n" + selected_location.getAddress());
 
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = edt_name.getText().toString().trim();
-                if (!TextUtils.isEmpty(name))
-                {
+                if (!TextUtils.isEmpty(name)) {
                     edt_name.setError(null);
-                    Common.CloseKeyBoard(activity,edt_name);
+                    Common.CloseKeyBoard(activity, edt_name);
 
-                    Favourite_location favourite_location = new Favourite_location(selected_location.getPlace_id(),name,selected_location.getStreet(),selected_location.getAddress(),selected_location.getLat(),selected_location.getLng());
-                    Fragment_Reserve_Order.this.favourite_location =favourite_location;
-                    preferences.SaveFavouriteLocation(activity,favourite_location);
-                    if (!selected_location.getStreet().isEmpty())
-                    {
-                        tv_fav_address_title.setText(name+" : "+selected_location.getStreet());
+                    Favourite_location favourite_location = new Favourite_location(selected_location.getPlace_id(), name, selected_location.getStreet(), selected_location.getAddress(), selected_location.getLat(), selected_location.getLng());
+                    Fragment_Reserve_Order.this.favourite_location = favourite_location;
+                    preferences.SaveFavouriteLocation(activity, favourite_location);
+                    if (!selected_location.getStreet().isEmpty()) {
+                        tv_fav_address_title.setText(name + " : " + selected_location.getStreet());
                         tv_fav_address.setText(selected_location.getAddress());
 
-                    }else
-                    {
+                    } else {
                         tv_fav_address_title.setText(name);
                         tv_fav_address.setText(selected_location.getAddress());
                     }
                     dialog.dismiss();
 
-                }else
-                {
+                } else {
                     edt_name.setError(getString(R.string.field_req));
                 }
             }
@@ -552,25 +543,22 @@ public class Fragment_Reserve_Order extends Fragment {
 
     }
 
-    public void updateSelectedLocation(Favourite_location favourite_location)
-    {
+    public void updateSelectedLocation(Favourite_location favourite_location) {
         this.selected_location = favourite_location;
         tv_address.setError(null);
-        updateSelectedAddress(favourite_location,false);
+        updateSelectedAddress(favourite_location, false);
     }
 
-    public void sendOrderWithImage()
-    {
+    public void sendOrderWithImage() {
         //this.delegate_id = delegate_id;
-        int coupon_id=0;
-        if(userModel.getCoupon_data()!=null){
-            coupon_id=userModel.getCoupon_data().getId();
-        }
-        else {
-            coupon_id=-1;
+        int coupon_id = 0;
+        if (userModel.getCoupon_data() != null) {
+            coupon_id = userModel.getCoupon_data().getId();
+        } else {
+            coupon_id = -1;
         }
         RequestBody user_id_part = Common.getRequestBodyText(userModel.getData().getUser_id());
-        RequestBody client_address_part = Common.getRequestBodyText(selected_location.getStreet()+" "+selected_location.getAddress());
+        RequestBody client_address_part = Common.getRequestBodyText(selected_location.getStreet() + " " + selected_location.getAddress());
         RequestBody client_lat_part = Common.getRequestBodyText(String.valueOf(selected_location.getLat()));
         RequestBody client_lng_part = Common.getRequestBodyText(String.valueOf(selected_location.getLng()));
         RequestBody order_details_part = Common.getRequestBodyText(order_details);
@@ -582,25 +570,23 @@ public class Fragment_Reserve_Order extends Fragment {
         RequestBody place_lat_part = Common.getRequestBodyText(String.valueOf(placeModel.getLat()));
         RequestBody place_lng_part = Common.getRequestBodyText(String.valueOf(placeModel.getLng()));
         RequestBody selected_time_part = Common.getRequestBodyText(String.valueOf(selected_time));
-        MultipartBody.Part image_part = Common.getMultiPart(activity,uri,"order_image");
-        RequestBody copun_part = Common.getRequestBodyText(coupon_id+"");
+        MultipartBody.Part image_part = Common.getMultiPart(activity, uri, "order_image");
+        RequestBody copun_part = Common.getRequestBodyText(coupon_id + "");
 
-        final ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
         dialog.show();
         Api.getService(Tags.base_url)
-                .sendOrderWithImage(user_id_part,client_address_part,client_lat_part,client_lng_part,order_details_part,place_id_part,place_name_part,place_address_part,order_type_part,place_lat_part,place_lng_part,selected_time_part,copun_part,image_part)
+                .sendOrderWithImage(user_id_part, client_address_part, client_lat_part, client_lng_part, order_details_part, place_id_part, place_name_part, place_address_part, order_type_part, place_lat_part, place_lng_part, selected_time_part, copun_part, image_part)
                 .enqueue(new Callback<OrderIdDataModel>() {
                     @Override
                     public void onResponse(Call<OrderIdDataModel> call, Response<OrderIdDataModel> response) {
                         dialog.dismiss();
-                        if (response.isSuccessful()&&response.body()!=null&&response.body().getData()!=null)
-                        {
+                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                             uri = null;
                             CreateAlertDialog(response.body().getData().getOrder_id());
-                        }else
-                        {
+                        } else {
                             try {
-                                Log.e("Error_code",response.code()+""+response.errorBody().string());
+                                Log.e("Error_code", response.code() + "" + response.errorBody().string());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -613,39 +599,36 @@ public class Fragment_Reserve_Order extends Fragment {
                         try {
                             dialog.dismiss();
                             Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
-                            Log.e("Error",t.getMessage());
-                        }catch (Exception e){}
+                            Log.e("Error", t.getMessage());
+                        } catch (Exception e) {
+                        }
                     }
                 });
 
     }
 
-    public void sendOrder()
-    {
+    public void sendOrder() {
         //this.delegate_id = delegate_id;
-        int coupon_id=0;
-        if(userModel.getCoupon_data()!=null){
-            coupon_id=userModel.getCoupon_data().getId();
-        }
-        else {
-            coupon_id=-1;
+        int coupon_id = 0;
+        if (userModel.getCoupon_data() != null) {
+            coupon_id = userModel.getCoupon_data().getId();
+        } else {
+            coupon_id = -1;
         }
 
-        final ProgressDialog dialog = Common.createProgressDialog(activity,getString(R.string.wait));
+        final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
         dialog.show();
         Api.getService(Tags.base_url)
-                .sendOrder(userModel.getData().getUser_id(),selected_location.getStreet()+" "+selected_location.getAddress(),selected_location.getLat(),selected_location.getLng(),order_details,placeModel.getPlace_id(),placeModel.getAddress(),"1",placeModel.getLat(),placeModel.getLng(),selected_time,coupon_id+"",placeModel.getName())
+                .sendOrder(userModel.getData().getUser_id(), selected_location.getStreet() + " " + selected_location.getAddress(), selected_location.getLat(), selected_location.getLng(), order_details, placeModel.getPlace_id(), placeModel.getAddress(), "1", placeModel.getLat(), placeModel.getLng(), selected_time, coupon_id + "", placeModel.getName())
                 .enqueue(new Callback<OrderIdDataModel>() {
                     @Override
                     public void onResponse(Call<OrderIdDataModel> call, Response<OrderIdDataModel> response) {
                         dialog.dismiss();
-                        if (response.isSuccessful()&&response.body()!=null&&response.body().getData()!=null)
-                        {
+                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                             CreateAlertDialog(response.body().getData().getOrder_id());
-                        }else
-                        {
+                        } else {
                             try {
-                                Log.e("Error_code",response.code()+""+response.errorBody().string());
+                                Log.e("Error_code", response.code() + "" + response.errorBody().string());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -658,27 +641,27 @@ public class Fragment_Reserve_Order extends Fragment {
                         try {
                             dialog.dismiss();
                             Toast.makeText(activity, getString(R.string.something), Toast.LENGTH_SHORT).show();
-                            Log.e("Error",t.getMessage());
-                        }catch (Exception e){}
+                            Log.e("Error", t.getMessage());
+                        } catch (Exception e) {
+                        }
                     }
                 });
 
     }
 
-    private void CreateTimeDialog()
-    {
+    private void CreateTimeDialog() {
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setCancelable(true)
                 .create();
 
-        View view  = LayoutInflater.from(activity).inflate(R.layout.dialog_delivery_time,null);
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_delivery_time, null);
         Button btn_select = view.findViewById(R.id.btn_select);
         Button btn_cancel = view.findViewById(R.id.btn_cancel);
 
         final NumberPicker numberPicker = view.findViewById(R.id.numberPicker);
 
         numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(timesList.length-1);
+        numberPicker.setMaxValue(timesList.length - 1);
         numberPicker.setDisplayedValues(timesList);
         numberPicker.setWrapSelectorWheel(false);
         numberPicker.setValue(0);
@@ -691,8 +674,6 @@ public class Fragment_Reserve_Order extends Fragment {
                 dialog.dismiss();
             }
         });
-
-
 
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -709,38 +690,36 @@ public class Fragment_Reserve_Order extends Fragment {
 
     private void setTime(int value) {
         Calendar calendar = Calendar.getInstance(new Locale(current_language));
-        switch (value)
-        {
+        switch (value) {
             case 0:
-                calendar.add(Calendar.HOUR_OF_DAY,1);
+                calendar.add(Calendar.HOUR_OF_DAY, 1);
                 break;
             case 1:
-                calendar.add(Calendar.HOUR_OF_DAY,2);
+                calendar.add(Calendar.HOUR_OF_DAY, 2);
 
                 break;
             case 2:
-                calendar.add(Calendar.HOUR_OF_DAY,3);
+                calendar.add(Calendar.HOUR_OF_DAY, 3);
 
                 break;
             case 3:
-                calendar.add(Calendar.DAY_OF_MONTH,1);
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
 
                 break;
             case 4:
-                calendar.add(Calendar.DAY_OF_MONTH,2);
+                calendar.add(Calendar.DAY_OF_MONTH, 2);
 
                 break;
             case 5:
-                calendar.add(Calendar.DAY_OF_MONTH,3);
+                calendar.add(Calendar.DAY_OF_MONTH, 3);
 
                 break;
         }
 
-        selected_time = calendar.getTimeInMillis()/1000;
+        selected_time = calendar.getTimeInMillis() / 1000;
     }
 
-    public  void CreateAlertDialog(String order_id)
-    {
+    public void CreateAlertDialog(String order_id) {
 
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
@@ -748,18 +727,17 @@ public class Fragment_Reserve_Order extends Fragment {
                 .create();
 
 
-        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_order_id,null);
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_order_id, null);
         Button btn_follow = view.findViewById(R.id.btn_follow);
         Button btn_cancel = view.findViewById(R.id.btn_cancel);
 
         TextView tv_msg = view.findViewById(R.id.tv_msg);
-        tv_msg.setText(getString(R.string.order_sent_successfully_order_number_is)+" #"+order_id);
+        tv_msg.setText(getString(R.string.order_sent_successfully_order_number_is) + " #" + order_id);
         btn_follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
                 activity.FollowOrder();
-
 
 
             }
@@ -775,26 +753,24 @@ public class Fragment_Reserve_Order extends Fragment {
             }
         });
 
-        dialog.getWindow().getAttributes().windowAnimations= R.style.dialog_congratulation_animation;
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;
         dialog.setCanceledOnTouchOutside(false);
         dialog.setView(view);
         dialog.show();
     }
 
 
-    private void CreateImageAlertDialog()
-    {
+    private void CreateImageAlertDialog() {
 
         final androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(activity)
                 .setCancelable(true)
                 .create();
 
 
-        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_select_image,null);
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_select_image, null);
         Button btn_camera = view.findViewById(R.id.btn_camera);
         Button btn_gallery = view.findViewById(R.id.btn_gallery);
         Button btn_cancel = view.findViewById(R.id.btn_cancel);
-
 
 
         btn_camera.setOnClickListener(new View.OnClickListener() {
@@ -813,7 +789,6 @@ public class Fragment_Reserve_Order extends Fragment {
                 Check_ReadPermission();
 
 
-
             }
         });
 
@@ -824,18 +799,16 @@ public class Fragment_Reserve_Order extends Fragment {
             }
         });
 
-        dialog.getWindow().getAttributes().windowAnimations= R.style.dialog_congratulation_animation;
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_congratulation_animation;
         dialog.setCanceledOnTouchOutside(false);
         dialog.setView(view);
         dialog.show();
     }
-    private void Check_ReadPermission()
-    {
-        if (ContextCompat.checkSelfPermission(activity,read_permission)!= PackageManager.PERMISSION_GRANTED )
-        {
-            ActivityCompat.requestPermissions(activity,new String[]{read_permission},IMG1);
-        }else
-        {
+
+    private void Check_ReadPermission() {
+        if (ContextCompat.checkSelfPermission(activity, read_permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{read_permission}, IMG1);
+        } else {
             select_photo(1);
 
         }
@@ -843,79 +816,64 @@ public class Fragment_Reserve_Order extends Fragment {
     }
 
 
-    private void Check_CameraPermission()
-    {
-        if (ContextCompat.checkSelfPermission(activity,camera_permission)!= PackageManager.PERMISSION_GRANTED&& ContextCompat.checkSelfPermission(activity,write_permission)!= PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(activity,new String[]{camera_permission,write_permission},IMG2);
-        }else
-        {
+    private void Check_CameraPermission() {
+        if (ContextCompat.checkSelfPermission(activity, camera_permission) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(activity, write_permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{camera_permission, write_permission}, IMG2);
+        } else {
             select_photo(2);
 
         }
 
     }
-    private void select_photo(int type)
-    {
+
+    private void select_photo(int type) {
         Intent intent = new Intent();
 
-        if (type == 1)
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            {
+        if (type == 1) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-            }else
-            {
+            } else {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
 
             }
 
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setType("image/*");
-            startActivityForResult(intent,IMG1);
+            startActivityForResult(intent, IMG1);
 
-        }else if (type ==2)
-        {
+        } else if (type == 2) {
             try {
                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent,IMG2);
-            }catch (SecurityException e)
-            {
-                Toast.makeText(activity,R.string.perm_image_denied, Toast.LENGTH_SHORT).show();
-            }
-            catch (Exception e)
-            {
-                Toast.makeText(activity,R.string.perm_image_denied, Toast.LENGTH_SHORT).show();
+                startActivityForResult(intent, IMG2);
+            } catch (SecurityException e) {
+                Toast.makeText(activity, R.string.perm_image_denied, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(activity, R.string.perm_image_denied, Toast.LENGTH_SHORT).show();
 
             }
-
 
 
         }
 
 
-
     }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IMG1 && resultCode == Activity.RESULT_OK && data!=null)
-        {
+        if (requestCode == IMG1 && resultCode == Activity.RESULT_OK && data != null) {
             uri = data.getData();
-            File file = new File(Common.getImagePath(activity,uri));
+            File file = new File(Common.getImagePath(activity, uri));
             try {
                 Picasso.with(activity).load(file).into(image_details);
 
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 Picasso.with(activity).load(uri).into(image_details);
             }
             image_details.setVisibility(View.VISIBLE);
 
-        }else if (requestCode == IMG2 && resultCode == Activity.RESULT_OK && data!=null)
-        {
+        } else if (requestCode == IMG2 && resultCode == Activity.RESULT_OK && data != null) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             image_details.setImageBitmap(bitmap);
             uri = getUriFromBitmap(bitmap);
@@ -925,22 +883,19 @@ public class Fragment_Reserve_Order extends Fragment {
     }
 
 
-    private Uri getUriFromBitmap(Bitmap bitmap)
-    {
+    private Uri getUriFromBitmap(Bitmap bitmap) {
         String path = "";
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
-            path = MediaStore.Images.Media.insertImage(activity.getContentResolver(),bitmap,"title",null);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            path = MediaStore.Images.Media.insertImage(activity.getContentResolver(), bitmap, "title", null);
             return Uri.parse(path);
 
-        }catch (SecurityException e)
-        {
-            Toast.makeText(activity,getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
+        } catch (SecurityException e) {
+            Toast.makeText(activity, getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
 
-        }catch (Exception e)
-        {
-            Toast.makeText(activity,getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(activity, getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
 
         }
         return null;
@@ -949,29 +904,21 @@ public class Fragment_Reserve_Order extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == IMG1)
-        {
-            if (grantResults.length>0)
-            {
-                if (grantResults[0]== PackageManager.PERMISSION_GRANTED)
-                {
+        if (requestCode == IMG1) {
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     select_photo(1);
-                }else
-                {
-                    Toast.makeText(activity,getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
                 }
             }
-        }else if (requestCode == IMG2)
-        {
-            if (grantResults.length>0)
-            {
-                if (grantResults[0]== PackageManager.PERMISSION_GRANTED&&grantResults[1]== PackageManager.PERMISSION_GRANTED)
-                {
+        } else if (requestCode == IMG2) {
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     select_photo(2);
 
-                }else
-                {
-                    Toast.makeText(activity,getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, getString(R.string.perm_image_denied), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -980,8 +927,8 @@ public class Fragment_Reserve_Order extends Fragment {
     }
 
     public void updateUserData(UserModel userModel) {
-        this.userModel=userModel;
+        this.userModel = userModel;
         userSingleTone.setUserModel(userModel);
-     //   cons_add_coupon.setVisibility(View.GONE);
+        //   cons_add_coupon.setVisibility(View.GONE);
     }
 }

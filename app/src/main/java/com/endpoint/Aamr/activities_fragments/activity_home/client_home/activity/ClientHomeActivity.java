@@ -1029,7 +1029,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
     }
 
-    public void DisplayFragmentReserveOrder(PlaceModel placeModel, PlaceDetailsModel.PlaceDetails placeDetails) {
+    public void DisplayFragmentReserveOrder(PlaceModel placeModel, PlaceDetailsModel.PlaceDetails placeDetails, int cat) {
 
         try {
 
@@ -1042,7 +1042,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                 } else {
                     fragment_count += 1;
 
-                    fragment_reserve_order = Fragment_Reserve_Order.newInstance(placeModel, placeDetails);
+                    fragment_reserve_order = Fragment_Reserve_Order.newInstance(placeModel, placeDetails,cat);
 
                     if (fragment_reserve_order.isAdded()) {
                         fragmentManager.beginTransaction().show(fragment_reserve_order).commit();
@@ -1097,12 +1097,12 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 
     }
 
-    public void DisplayFragmentStoreDetails(PlaceModel placeModel) {
+    public void DisplayFragmentStoreDetails(PlaceModel placeModel, int i) {
 
         fragment_count += 1;
 
 
-        fragment_store_details = Fragment_Store_Details.newInstance(placeModel, location.getLatitude(), location.getLongitude());
+        fragment_store_details = Fragment_Store_Details.newInstance(placeModel, location.getLatitude(), location.getLongitude(),i);
 
         if (fragment_store_details.isAdded()) {
             fragmentManager.beginTransaction().show(fragment_store_details).commit();

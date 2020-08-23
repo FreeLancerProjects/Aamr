@@ -62,7 +62,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.MyHolder> 
 
                 if (fragment instanceof Fragment_Client_Store) {
                     Fragment_Client_Store fragment_client_store = (Fragment_Client_Store) fragment;
-                    fragment_client_store.setItemData(placeModel);
+                    fragment_client_store.setItemData(placeModel,i);
 
                 } else if (fragment instanceof Fragment_Search) {
                     // Fragment_Search fragment_search = (Fragment_Search) fragment;

@@ -454,8 +454,8 @@ public class Fragment_Client_Store extends Fragment {
     }
 
 
-    public void setItemData(PlaceModel placeModel) {
-        activity.DisplayFragmentStoreDetails(placeModel);
+    public void setItemData(PlaceModel placeModel, int i) {
+        activity.DisplayFragmentStoreDetails(placeModel,i);
 
     }
 

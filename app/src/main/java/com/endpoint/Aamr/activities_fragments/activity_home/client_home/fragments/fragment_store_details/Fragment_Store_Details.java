@@ -33,38 +33,38 @@ public class Fragment_Store_Details extends Fragment {
     private static final String TAG = "Data";
     private static final String TAG2 = "LAT";
     private static final String TAG3 = "LNG";
-
+    private static final String TAG4 = "cat";
     private ClientHomeActivity activity;
     private ImageView arrow;
     private ConstraintLayout cons_back;
-    private TextView tv_name,tv_distance;
+    private TextView tv_name, tv_distance;
     private TabLayout tab;
     private ViewPager pager;
     private String current_language;
     private PlaceModel placeModel;
-    private double lat = 0.0,lng = 0.0;
+    private double lat = 0.0, lng = 0.0;
     private List<String> titleList;
     private List<Fragment> fragmentList;
     private ViewPagerAdapter viewPagerAdapter;
     private TextView tv_counter;
+    public int cat;
 
 
-
-    public static Fragment_Store_Details newInstance(PlaceModel placeModel, double lat , double lng)
-    {
+    public static Fragment_Store_Details newInstance(PlaceModel placeModel, double lat, double lng, int i) {
         Fragment_Store_Details fragment_store_details = new Fragment_Store_Details();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(TAG,placeModel);
-        bundle.putDouble(TAG2,  lat);
-        bundle.putDouble(TAG3,  lng);
-
+        bundle.putSerializable(TAG, placeModel);
+        bundle.putDouble(TAG2, lat);
+        bundle.putDouble(TAG3, lng);
+        bundle.putInt(TAG4, i);
         fragment_store_details.setArguments(bundle);
         return fragment_store_details;
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_store_details,container,false);
+        View view = inflater.inflate(R.layout.fragment_store_details, container, false);
         initView(view);
         return view;
     }
@@ -77,18 +77,16 @@ public class Fragment_Store_Details extends Fragment {
         Paper.init(activity);
         current_language = Paper.book().read("lang", Locale.getDefault().getLanguage());
         arrow = view.findViewById(R.id.arrow);
-        if (current_language.equals("ar"))
-        {
+        if (current_language.equals("ar")) {
             arrow.setImageResource(R.drawable.ic_right_arrow);
-            arrow.setColorFilter(ContextCompat.getColor(activity,R.color.white), PorterDuff.Mode.SRC_IN);
+            arrow.setColorFilter(ContextCompat.getColor(activity, R.color.white), PorterDuff.Mode.SRC_IN);
 
-        }else
-            {
-                arrow.setImageResource(R.drawable.ic_left_arrow);
-                arrow.setColorFilter(ContextCompat.getColor(activity,R.color.white), PorterDuff.Mode.SRC_IN);
+        } else {
+            arrow.setImageResource(R.drawable.ic_left_arrow);
+            arrow.setColorFilter(ContextCompat.getColor(activity, R.color.white), PorterDuff.Mode.SRC_IN);
 
 
-            }
+        }
         cons_back = view.findViewById(R.id.cons_back);
         tv_name = view.findViewById(R.id.tv_name);
         tv_distance = view.findViewById(R.id.tv_distance);
@@ -105,30 +103,27 @@ public class Fragment_Store_Details extends Fragment {
         });
 
         Bundle bundle = getArguments();
-        if (bundle!=null)
-        {
+        if (bundle != null) {
             placeModel = (PlaceModel) bundle.getSerializable(TAG);
             lat = bundle.getDouble(TAG2);
             lng = bundle.getDouble(TAG3);
-
-            updateUI(placeModel,lat,lng);
+            cat = bundle.getInt(TAG4);
+            updateUI(placeModel, lat, lng,cat);
 
         }
-
 
 
     }
 
 
-
-    private void updateUI(PlaceModel placeModel, double lat, double lng) {
+    private void updateUI(PlaceModel placeModel, double lat, double lng, int cat) {
         tv_name.setText(placeModel.getName());
         double distance = SphericalUtil.computeDistanceBetween(new LatLng(lat, lng), new LatLng(placeModel.getLat(), placeModel.getLng()));
-        tv_distance.setText(String.format("%.2f",(distance/1000))+" "+getString(R.string.away));
+        tv_distance.setText(String.format("%.2f", (distance / 1000)) + " " + getString(R.string.away));
 
         titleList.add(getString(R.string.shop_info));
         titleList.add(getString(R.string.pending_order));
-        fragmentList.add(Fragment_Details.newInstance(placeModel,lat,lng));
+        fragmentList.add(Fragment_Details.newInstance(placeModel, lat, lng,cat));
         fragmentList.add(Fragment_Pending_Orders.newInstance(placeModel));
 
         viewPagerAdapter.AddFragments(fragmentList);
@@ -141,16 +136,16 @@ public class Fragment_Store_Details extends Fragment {
     }
 
     private void AddBudget() {
-        View view = LayoutInflater.from(activity).inflate(R.layout.tab_budget_layout,null);
+        View view = LayoutInflater.from(activity).inflate(R.layout.tab_budget_layout, null);
         tv_counter = view.findViewById(R.id.tv_counter);
         TextView tv_title = view.findViewById(R.id.tv_title);
         tv_title.setText(getString(R.string.pending_order));
         tab.getTabAt(1).setCustomView(view);
 
     }
-    public void AddCounter(int counter)
-    {
-        tv_counter.setText(counter+"");
+
+    public void AddCounter(int counter) {
+        tv_counter.setText(counter + "");
         tv_counter.setVisibility(View.VISIBLE);
     }
 

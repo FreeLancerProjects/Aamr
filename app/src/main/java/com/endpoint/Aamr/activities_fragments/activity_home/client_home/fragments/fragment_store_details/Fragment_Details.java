@@ -60,6 +60,7 @@ public class Fragment_Details extends Fragment implements OnMapReadyCallback {
     private static final String TAG = "Data";
     private static final String TAG2 = "LAT";
     private static final String TAG3 = "LNG";
+    private static final String TAG4 ="cat" ;
 
     private ClientHomeActivity activity;
     private LinearLayout ll_map,ll_delegate,ll_today,ll_open_hour,ll_map_type;
@@ -80,14 +81,16 @@ public class Fragment_Details extends Fragment implements OnMapReadyCallback {
     private UserSingleTone userSingleTone;
     private UserModel userModel;
     private PlaceDetailsModel.PlaceDetails placeDetails;
+    private int cat;
 
-    public static Fragment_Details newInstance(PlaceModel placeModel, double lat, double lng)
+    public static Fragment_Details newInstance(PlaceModel placeModel, double lat, double lng, int cat)
     {
         Fragment_Details fragment_details = new Fragment_Details();
         Bundle bundle = new Bundle();
         bundle.putSerializable(TAG,placeModel);
         bundle.putDouble(TAG2,  lat);
         bundle.putDouble(TAG3,  lng);
+        bundle.putInt(TAG4,cat);
         fragment_details.setArguments(bundle);
         return fragment_details;
 
@@ -151,6 +154,7 @@ public class Fragment_Details extends Fragment implements OnMapReadyCallback {
             placeModel = (PlaceModel) bundle.getSerializable(TAG);
             lat = bundle.getDouble(TAG2);
             lng = bundle.getDouble(TAG3);
+            cat = bundle.getInt(TAG4);
 
             updateUI(placeModel);
 
@@ -248,7 +252,7 @@ public class Fragment_Details extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 try {
-                    activity.DisplayFragmentReserveOrder(placeModel,placeDetails);
+                    activity.DisplayFragmentReserveOrder(placeModel,placeDetails,cat);
 
 
                 }
