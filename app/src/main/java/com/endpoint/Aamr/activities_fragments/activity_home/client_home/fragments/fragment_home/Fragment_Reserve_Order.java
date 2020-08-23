@@ -156,6 +156,7 @@ public class Fragment_Reserve_Order extends Fragment {
             arrow2.setImageResource(R.drawable.ic_left_arrow);
             arrow2.setColorFilter(ContextCompat.getColor(activity, R.color.black), PorterDuff.Mode.SRC_IN);
 
+
         } else {
             arrow.setImageResource(R.drawable.ic_left_arrow);
             arrow.setColorFilter(ContextCompat.getColor(activity, R.color.white), PorterDuff.Mode.SRC_IN);
@@ -437,6 +438,7 @@ public class Fragment_Reserve_Order extends Fragment {
                         llSlider.setVisibility(View.VISIBLE);
                         adapter = new SliderStoreDetailsAdapter(placeDetails.getPhotos(),activity);
                         pager.setAdapter(adapter);
+                        llSlider.setVisibility(View.GONE);
 
                     }else
                     {
