@@ -447,7 +447,7 @@ public interface Service {
     );
 
     @FormUrlEncoded
-    @POST("http://sub.amirapp.store.net/api/online-payment")
+    @POST("http://sub.amirapp.store/api/online-payment")
     Call<PayPalLinkModel> getPayPalLink(
             @Field("user_id") String user_id,
             @Field("user_type") String user_type,
