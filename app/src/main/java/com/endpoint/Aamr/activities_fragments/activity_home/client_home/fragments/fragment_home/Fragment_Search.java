@@ -56,12 +56,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Fragment_Search extends Fragment
-{
+public class Fragment_Search extends Fragment {
     private static final String TAG2 = "LAT";
     private static final String TAG3 = "LNG";
     private ClientHomeActivity activity;
-    private ImageView arrow,image_icon_delete;
+    private ImageView arrow, image_icon_delete;
     private ConstraintLayout cons_search;
     private LinearLayout ll_no_store;
     private EditText edt_search;
@@ -78,7 +77,7 @@ public class Fragment_Search extends Fragment
     private SearchRecentAdapter searchRecentAdapter;
     private List<NearbyModel> nearbyModelList;
     private double lat = 0.0, lng = 0.0;
-    private String user_address="";
+    private String user_address = "";
 
 
     @Nullable
@@ -107,12 +106,11 @@ public class Fragment_Search extends Fragment
         if (bundle != null) {
             lat = bundle.getDouble(TAG2);
             lng = bundle.getDouble(TAG3);
-            user_address = getUserAddress(lat,lng);
+            user_address = getUserAddress(lat, lng);
         }
 
         queryModelList = new ArrayList<>();
         nearbyModelList = new ArrayList<>();
-
 
 
         preferences = Preferences.getInstance();
@@ -126,7 +124,6 @@ public class Fragment_Search extends Fragment
             arrow.setImageResource(R.drawable.ic_right_arrow);
 
         }
-
 
 
         image_icon_delete = view.findViewById(R.id.image_icon_delete);
@@ -170,13 +167,12 @@ public class Fragment_Search extends Fragment
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (image_icon_delete.getVisibility() != View.VISIBLE)
-                {
+                if (image_icon_delete.getVisibility() != View.VISIBLE) {
                     image_icon_delete.setVisibility(View.VISIBLE);
 
                 }
 
-                if (queryModelList.size()>0) {
+                if (queryModelList.size() > 0) {
                     if (!expandLayout.isExpanded()) {
                         expandLayout.setExpanded(true);
 
@@ -185,7 +181,7 @@ public class Fragment_Search extends Fragment
 
                 }
 
-                if (edt_search.getText().toString().length() == 0){
+                if (edt_search.getText().toString().length() == 0) {
                     query = "";
                     image_icon_delete.setVisibility(View.GONE);
                     expandLayout.collapse(true);
@@ -228,8 +224,6 @@ public class Fragment_Search extends Fragment
     }
 
 
-
-
     private void Search() {
 
 
@@ -237,7 +231,7 @@ public class Fragment_Search extends Fragment
         expandLayout.collapse(true);
         ll_no_store.setVisibility(View.GONE);
 
-        Common.CloseKeyBoard(activity,edt_search);
+        Common.CloseKeyBoard(activity, edt_search);
         ll_no_store.setVisibility(View.GONE);
         nearbyModelList.clear();
         if (adapter != null) {
@@ -246,16 +240,16 @@ public class Fragment_Search extends Fragment
         progBar.setVisibility(View.VISIBLE);
 
 
-        String loc = lat+","+lng;
-Log.e("mmmmm","https://maps.googleapis.com/maps/api/place/nearbysearch/json"+loc+"5000"+query+current_language+getString(R.string.map_api_key));
+        String loc = lat + "," + lng;
+        Log.e("mmmmm", "https://maps.googleapis.com/maps/api/place/nearbysearch/json" + loc + "5000" + query + current_language + getString(R.string.map_api_key));
         Api.getService("https://maps.googleapis.com/maps/api/")
-                .getNearbySearchStores(loc,5000,query,current_language,getString(R.string.map_api_key))
+                .getNearbySearchStores(loc, 5000, query, current_language, getString(R.string.map_api_key))
                 .enqueue(new Callback<NearbyStoreDataModel>() {
                     @Override
                     public void onResponse(Call<NearbyStoreDataModel> call, Response<NearbyStoreDataModel> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             progBar.setVisibility(View.GONE);
-                            if (response.body()!=null&&response.body().getResults()!=null&&response.body().getResults().size()>0) {
+                            if (response.body() != null && response.body().getResults() != null && response.body().getResults().size() > 0) {
                                 preferences.saveQuery(activity, new QueryModel(query.trim()));
                                 updateAdapter(response.body().getResults());
 
@@ -339,7 +333,7 @@ Log.e("mmmmm","https://maps.googleapis.com/maps/api/place/nearbysearch/json"+loc
     private void updateAdapter(List<NearbyModel> results) {
 
         nearbyModelList.addAll(results);
-        Collections.sort(nearbyModelList,NearbyModel.distanceComparator);
+        Collections.sort(nearbyModelList, NearbyModel.distanceComparator);
 
         adapter.notifyDataSetChanged();
         queryModelList.clear();
@@ -347,27 +341,21 @@ Log.e("mmmmm","https://maps.googleapis.com/maps/api/place/nearbysearch/json"+loc
         updateSearchAdapter();
     }
 
-    private List<PlaceModel> getPlaceModelFromResult(List<SearchModel> searchModelList)
-    {
+    private List<PlaceModel> getPlaceModelFromResult(List<SearchModel> searchModelList) {
         List<PlaceModel> returnedList = new ArrayList<>();
 
-        for (SearchModel searchModel : searchModelList)
-        {
-            PlaceModel placeModel ;
-            if (searchModel.getPhotos()!=null)
-            {
-                placeModel = new PlaceModel(searchModel.getId(),searchModel.getPlace_id(),searchModel.getName(),searchModel.getIcon(),searchModel.getPhotos(),searchModel.getRating(),searchModel.getGeometry().getLocation().getLat(),searchModel.getGeometry().getLocation().getLng(),searchModel.getFormatted_address());
+        for (SearchModel searchModel : searchModelList) {
+            PlaceModel placeModel;
+            if (searchModel.getPhotos() != null) {
+                placeModel = new PlaceModel(searchModel.getId(), searchModel.getPlace_id(), searchModel.getName(), searchModel.getIcon(), searchModel.getPhotos(), searchModel.getRating(), searchModel.getGeometry().getLocation().getLat(), searchModel.getGeometry().getLocation().getLng(), searchModel.getFormatted_address());
 
-            }else
-            {
-                placeModel = new PlaceModel(searchModel.getId(),searchModel.getPlace_id(),searchModel.getName(),searchModel.getIcon(),new ArrayList<PhotosModel>(),searchModel.getRating(),searchModel.getGeometry().getLocation().getLat(),searchModel.getGeometry().getLocation().getLng(),searchModel.getFormatted_address());
+            } else {
+                placeModel = new PlaceModel(searchModel.getId(), searchModel.getPlace_id(), searchModel.getName(), searchModel.getIcon(), new ArrayList<PhotosModel>(), searchModel.getRating(), searchModel.getGeometry().getLocation().getLat(), searchModel.getGeometry().getLocation().getLng(), searchModel.getFormatted_address());
 
             }
-            if (searchModel.getOpening_hours()!=null)
-            {
+            if (searchModel.getOpening_hours() != null) {
                 placeModel.setOpenNow(searchModel.getOpening_hours().isOpen_now());
-            }else
-            {
+            } else {
                 placeModel.setOpenNow(false);
 
             }
@@ -375,15 +363,13 @@ Log.e("mmmmm","https://maps.googleapis.com/maps/api/place/nearbysearch/json"+loc
         }
         return returnedList;
     }
+
     private void updateSearchAdapter() {
-        if (queryModelList.size()>0)
-        {
-            if (searchRecentAdapter==null)
-            {
+        if (queryModelList.size() > 0) {
+            if (searchRecentAdapter == null) {
                 searchRecentAdapter = new SearchRecentAdapter(queryModelList, activity, this);
                 recViewQueries.setAdapter(searchRecentAdapter);
-            }else
-            {
+            } else {
                 searchRecentAdapter.notifyDataSetChanged();
 
             }
@@ -401,43 +387,35 @@ Log.e("mmmmm","https://maps.googleapis.com/maps/api/place/nearbysearch/json"+loc
 
     public void setItemData(NearbyModel nearbyModel) {
 
-        PlaceModel placeModel ;
-        if (nearbyModel.getPhotos()!=null)
-        {
-            placeModel = new PlaceModel(nearbyModel.getId(),nearbyModel.getPlace_id(),nearbyModel.getName(),nearbyModel.getIcon(),nearbyModel.getPhotos(),nearbyModel.getRating(),nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng(),nearbyModel.getVicinity());
+        PlaceModel placeModel;
+        if (nearbyModel.getPhotos() != null) {
+            placeModel = new PlaceModel(nearbyModel.getId(), nearbyModel.getPlace_id(), nearbyModel.getName(), nearbyModel.getIcon(), nearbyModel.getPhotos(), nearbyModel.getRating(), nearbyModel.getGeometry().getLocation().getLat(), nearbyModel.getGeometry().getLocation().getLng(), nearbyModel.getVicinity());
 
-        }else
-        {
-            placeModel = new PlaceModel(nearbyModel.getId(),nearbyModel.getPlace_id(),nearbyModel.getName(),nearbyModel.getIcon(),new ArrayList<PhotosModel>(),nearbyModel.getRating(),nearbyModel.getGeometry().getLocation().getLat(),nearbyModel.getGeometry().getLocation().getLng(),nearbyModel.getVicinity());
+        } else {
+            placeModel = new PlaceModel(nearbyModel.getId(), nearbyModel.getPlace_id(), nearbyModel.getName(), nearbyModel.getIcon(), new ArrayList<PhotosModel>(), nearbyModel.getRating(), nearbyModel.getGeometry().getLocation().getLat(), nearbyModel.getGeometry().getLocation().getLng(), nearbyModel.getVicinity());
 
         }
-        if (nearbyModel.getOpening_hours()!=null)
-        {
+        if (nearbyModel.getOpening_hours() != null) {
             placeModel.setOpenNow(nearbyModel.getOpening_hours().isOpen_now());
 
         }
-        activity.DisplayFragmentStoreDetails(placeModel, i);
+        activity.DisplayFragmentStoreDetails(placeModel, 0);
     }
 
-    private String getUserAddress(double lat, double lng)
-    {
+    private String getUserAddress(double lat, double lng) {
         String user_address = "";
 
-        Geocoder geocoder = new Geocoder(activity,new Locale(current_language));
+        Geocoder geocoder = new Geocoder(activity, new Locale(current_language));
         try {
-            List<Address> addressList = geocoder.getFromLocation(lat,lng,1);
-            if (addressList!=null&&addressList.size()>0)
-            {
+            List<Address> addressList = geocoder.getFromLocation(lat, lng, 1);
+            if (addressList != null && addressList.size() > 0) {
                 Address address = addressList.get(0);
-                if (address!=null)
-                {
-                    if (address.getLocality()!=null)
-                    {
-                        if (address.getSubAdminArea()!=null)
-                        {
+                if (address != null) {
+                    if (address.getLocality() != null) {
+                        if (address.getSubAdminArea() != null) {
                             user_address = address.getSubAdminArea();
 
-                        }else {
+                        } else {
                             user_address = address.getLocality();
 
                         }
@@ -452,7 +430,6 @@ Log.e("mmmmm","https://maps.googleapis.com/maps/api/place/nearbysearch/json"+loc
 
         return user_address;
     }
-
 
 
 }
