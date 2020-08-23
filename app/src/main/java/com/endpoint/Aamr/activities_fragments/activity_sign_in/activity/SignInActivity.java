@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.endpoint.Aamr.R;
+import com.endpoint.Aamr.activities_fragments.about.AboutActivity;
 import com.endpoint.Aamr.activities_fragments.activity_home.client_home.activity.ClientHomeActivity;
 import com.endpoint.Aamr.activities_fragments.activity_sign_in.fragments.Fragment_Chooser_Login;
 import com.endpoint.Aamr.activities_fragments.activity_sign_in.fragments.Fragment_Code_Verification;
@@ -212,7 +213,7 @@ public class SignInActivity extends AppCompatActivity {
     }
     public void NavigateToTermsActivity()
     {
-        Intent intent = new Intent(this, TermsConditionsActivity.class);
+        Intent intent = new Intent(this, AboutActivity.class);
         intent.putExtra("type",3);
         startActivity(intent);
         if (current_lang.equals("ar"))
