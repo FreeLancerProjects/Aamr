@@ -64,24 +64,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             final MyHolder myHolder = (MyHolder) holder;
             NotificationModel notificationModel = notificationModelList.get(myHolder.getAdapterPosition());
-            if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW)))
-            {
-                if (user_type.equals(Tags.TYPE_DELEGATE))
-                {
+            if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
+                if (user_type.equals(Tags.TYPE_DELEGATE)) {
                     myHolder.BindData(notificationModel);
 
                 }
-            }else
-                {
-                    myHolder.BindData(notificationModel);
+            } else {
+                myHolder.BindData(notificationModel);
 
-                }
+            }
             myHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     NotificationModel notificationModel = notificationModelList.get(myHolder.getAdapterPosition());
                     //delegate send price offer client accept or refused
-                    fragment.setItemData(notificationModel,myHolder.getAdapterPosition());
+                    fragment.setItemData(notificationModel, myHolder.getAdapterPosition());
 
 
                 }
@@ -109,8 +106,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public class MyHolder extends RecyclerView.ViewHolder {
         private CircleImageView image;
-        private ImageView image_state,imageDelete;
-        private TextView tv_name, tv_order_num, tv_notification_date, tv_order_state,tv_add_rate,order_num,order_state;
+        private ImageView image_state, imageDelete;
+        private TextView tv_name, tv_order_num, tv_notification_date, tv_order_state, tv_add_rate, order_num, order_state;
 
         public MyHolder(View itemView) {
             super(itemView);
@@ -122,30 +119,32 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             tv_order_state = itemView.findViewById(R.id.tv_order_state);
             tv_name = itemView.findViewById(R.id.tv_name);
             tv_add_rate = itemView.findViewById(R.id.tv_add_rate);
-            order_num=itemView.findViewById(R.id.order_num);
-            order_state=itemView.findViewById(R.id.order_state);
-            imageDelete=itemView.findViewById(R.id.imageDelete);
+            order_num = itemView.findViewById(R.id.order_num);
+            order_state = itemView.findViewById(R.id.order_state);
+            imageDelete = itemView.findViewById(R.id.imageDelete);
         }
 
         public void BindData(NotificationModel notificationModel) {
-          Log.e("nfnfnfn",notificationModel.getOrder_status());
-            if(!notificationModel.getOrder_status().equals("sss")) {
+            try {
+                Log.e("nfnfnfn", notificationModel.getOrder_status() + notificationModel.getTitle_notification());
+
+            } catch (Exception e) {
+
+            }
+            if (!notificationModel.getOrder_status().equals("sss")) {
                 tv_order_num.setText("#" + notificationModel.getOrder_id());
                 tv_notification_date.setText(TimeAgo.getTimeAgo(Long.parseLong(notificationModel.getDate_notification()) * 1000, context));
 
 
             }
-            if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW)))
-            {
-                if (user_type.equals(Tags.TYPE_CLIENT))
-                {
+            if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_ORDER_NEW))) {
+                if (user_type.equals(Tags.TYPE_CLIENT)) {
                     tv_order_state.setText(R.string.not_approved);
 
-                }else
-                    {
-                        tv_order_state.setText(context.getString(R.string.new_order_sent2));
+                } else {
+                    tv_order_state.setText(context.getString(R.string.new_order_sent2));
 
-                    }
+                }
                 image_state.setVisibility(View.GONE);
                 image_state.setVisibility(View.GONE);
                 tv_add_rate.setVisibility(View.GONE);
@@ -153,10 +152,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 tv_name.setText(notificationModel.getOrder_details());
 
 
-
-
-            }
-             else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_ACCEPT_OFFER))) {
+            } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_ACCEPT_OFFER))) {
                 image_state.setBackgroundResource(R.drawable.wait_bg);
                 image_state.setImageResource(R.drawable.ic_time_left);
                 image_state.setVisibility(View.VISIBLE);
@@ -178,8 +174,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 }
 
-            }
-            else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_REFUSE_ORDER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_REFUSE_OFFER))) {
+            } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_REFUSE_ORDER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_CLIENT_REFUSE_OFFER))) {
 
 
                 image_state.setBackgroundResource(R.drawable.delete_bg);
@@ -189,86 +184,71 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 image_state.setVisibility(View.VISIBLE);
                 tv_add_rate.setVisibility(View.GONE);
 
-                if (user_type.equals(Tags.TYPE_CLIENT))
-                {
+                if (user_type.equals(Tags.TYPE_CLIENT)) {
                     tv_order_state.setText(R.string.order_refused_send_again);
 
-                }else
-
-                {
+                } else {
                     Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
                     tv_name.setText(notificationModel.getFrom_user_full_name());
                     tv_order_state.setText(R.string.offer_refused);
 
                 }
-            }
-            else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERED_ORDER)))
+            } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERED_ORDER))) {
 
-            {
+                Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
+                tv_name.setText(notificationModel.getFrom_user_full_name());
+                tv_order_state.setText(context.getString(R.string.done));
 
-                    Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
-                    tv_name.setText(notificationModel.getFrom_user_full_name());
-                    tv_order_state.setText(context.getString(R.string.done));
+                image_state.setBackgroundResource(R.drawable.finish_bg);
+                image_state.setImageResource(R.drawable.ic_correct);
+                tv_add_rate.setVisibility(View.VISIBLE);
+                image_state.setVisibility(View.VISIBLE);
+                image_state.setVisibility(View.VISIBLE);
+                if (notificationModel.getFrom_user_type().equals(Tags.TYPE_CLIENT)) {
+                    tv_add_rate.setVisibility(View.GONE);
+                }
 
-                    image_state.setBackgroundResource(R.drawable.finish_bg);
-                    image_state.setImageResource(R.drawable.ic_correct);
-                    tv_add_rate.setVisibility(View.VISIBLE);
-                    image_state.setVisibility(View.VISIBLE);
-                    image_state.setVisibility(View.VISIBLE);
-                    if(notificationModel.getFrom_user_type().equals(Tags.TYPE_CLIENT)){
-                        tv_add_rate.setVisibility(View.GONE);
-                    }
-
-            }
-            else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTING_ORDER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTED_ORDER))) {
+            } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTING_ORDER)) || notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_COLLECTED_ORDER))) {
 
 
-
-image_state.setVisibility(View.GONE);
+                image_state.setVisibility(View.GONE);
                 image_state.setVisibility(View.VISIBLE);
                 image_state.setVisibility(View.VISIBLE);
                 tv_add_rate.setVisibility(View.GONE);
 
-                if (user_type.equals(Tags.TYPE_CLIENT))
-                {
+                if (user_type.equals(Tags.TYPE_CLIENT)) {
                     tv_order_state.setText(notificationModel.getTitle_notification());
                     tv_name.setText(notificationModel.getOrder_details());
 
-                }else
-
-                {
+                } else {
                     Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
                     tv_name.setText(notificationModel.getOrder_details());
                     tv_order_state.setText(notificationModel.getTitle_notification());
 
                 }
-            }
-            else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERING_ORDER)))
-            {
+            } else if (notificationModel.getOrder_status().equals(String.valueOf(Tags.STATE_DELEGATE_DELIVERING_ORDER))) {
 
-                    Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
+                Picasso.with(context).load(Uri.parse(Tags.IMAGE_URL + notificationModel.getFrom_user_image())).placeholder(R.drawable.logo_only).fit().into(image);
                 tv_name.setText(notificationModel.getOrder_details());
-                    tv_order_state.setText(notificationModel.getTitle_notification());
+                tv_order_state.setText(notificationModel.getTitle_notification());
 
-                    image_state.setBackgroundResource(R.drawable.finish_bg);
-                    image_state.setImageResource(R.drawable.ic_correct);
-                    tv_add_rate.setVisibility(View.VISIBLE);
-                    image_state.setVisibility(View.VISIBLE);
-                    image_state.setVisibility(View.VISIBLE);
+                image_state.setBackgroundResource(R.drawable.finish_bg);
+                image_state.setImageResource(R.drawable.ic_correct);
+                tv_add_rate.setVisibility(View.GONE);
+                image_state.setVisibility(View.VISIBLE);
+                image_state.setVisibility(View.VISIBLE);
 
-            }
-
-            else {
+            } else {
                 tv_name.setText(notificationModel.getTitle_notification());
-order_num.setVisibility(View.GONE);
-order_state.setVisibility(View.GONE);
-tv_notification_date.setVisibility(View.GONE);
-tv_add_rate.setVisibility(View.GONE);
-tv_order_num.setVisibility(View.GONE);
-tv_order_state.setVisibility(View.GONE);
-imageDelete.setVisibility(View.VISIBLE);
-tv_name.setLineSpacing(1.5f,1.5f);
-           }
+                order_num.setVisibility(View.GONE);
+                order_state.setVisibility(View.GONE);
+                tv_notification_date.setVisibility(View.GONE);
+                tv_add_rate.setVisibility(View.GONE);
+                tv_order_num.setVisibility(View.GONE);
+                tv_order_state.setVisibility(View.GONE);
+                imageDelete.setVisibility(View.VISIBLE);
+                tv_name.setLineSpacing(1.5f, 1.5f);
+            }
 
         }
     }

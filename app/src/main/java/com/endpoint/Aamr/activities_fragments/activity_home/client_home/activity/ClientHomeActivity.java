@@ -133,7 +133,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
     private Fragment_Client_Orders fragment_client_orders;
     private Fragment_Client_Notifications fragment_client_notifications;
     private Fragment_Client_Profile fragment_client_profile;
-   private Fragment_blog fragment_blog;
+    private Fragment_blog fragment_blog;
 
     private Fragment_Store_Details fragment_store_details;
     private Fragment_Shipment fragment_shipment;
@@ -209,7 +209,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                     String status = intent.getStringExtra("status");
 
                     Log.e("status", status + "");
-                    if (status.equals(String.valueOf(Tags.STATE_ORDER_NEW))||status.equals(Tags.FIREBASE_Order_Deleted)) {
+                    if (status.equals(String.valueOf(Tags.STATE_ORDER_NEW)) || status.equals(Tags.FIREBASE_Order_Deleted)) {
 
                         DisplayFragmentMyOrders();
 
@@ -229,8 +229,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                                         manager.cancelAll();
                                     }
                                 }, 1);
-                    }
-                    else if (status.equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER))) {
+                    } else if (status.equals(String.valueOf(Tags.STATE_DELEGATE_SEND_OFFER))) {
                         new Handler()
                                 .postDelayed(new Runnable() {
                                     @Override
@@ -483,29 +482,29 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                             fragment_client_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
                         }
                     }, 1);
+        } else {
+            if (notStateModel.getNotification_state().equals(Tags.FIREBASE_Order_Deleted)) {
+                if (fragment_delegate_current_order_details != null && fragment_delegate_current_order_details.isAdded()) {
+                    new Handler()
+                            .postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //   fragment_client_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
+                                    cDeleteOrder();
+                                }
+                            }, 1);
+                } else {
+                    new Handler()
+                            .postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //   fragment_client_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
+                                    fragment_client_orders.getOrders();
+                                }
+                            }, 1);
+                }
+            }
         }
-        else {
-         if(notStateModel.getNotification_state().equals(Tags.FIREBASE_Order_Deleted)){
-             if (fragment_delegate_current_order_details != null && fragment_delegate_current_order_details.isAdded()) {
-                 new Handler()
-                         .postDelayed(new Runnable() {
-                             @Override
-                             public void run() {
-                              //   fragment_client_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
-                                 cDeleteOrder();
-                             }
-                         }, 1);
-             }
-             else {
-                 new Handler()
-                         .postDelayed(new Runnable() {
-                             @Override
-                             public void run() {
-                                 //   fragment_client_order_details.updateStepView(Integer.parseInt(notStateModel.getNotification_state()));
-fragment_client_orders.getOrders();                             }
-                         }, 1);
-             }
-        }}
 
         canRead = true;
         RefreshFragment_Notification();
@@ -537,13 +536,12 @@ fragment_client_orders.getOrders();                             }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void ListenNotificationOFFer(UserModel userModel) {
 
-     if(fragment_client_orders!=null){
-         fragment_client_orders.getOrders();
-     }
+        if (fragment_client_orders != null) {
+            fragment_client_orders.getOrders();
+        }
 
 
     }
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -852,8 +850,7 @@ fragment_client_orders.getOrders();                             }
 
         if (fragment_client_orders == null) {
             fragment_client_orders = Fragment_Client_Orders.newInstance();
-        }
-        else {
+        } else {
             fragment_client_orders.getOrders();
         }
 
@@ -890,8 +887,7 @@ fragment_client_orders.getOrders();                             }
 
         if (fragment_client_notifications == null) {
             fragment_client_notifications = Fragment_Client_Notifications.newInstance();
-        }
-        else {
+        } else {
             fragment_client_notifications.getNotification();
         }
 
@@ -1137,7 +1133,7 @@ fragment_client_orders.getOrders();                             }
                         .postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                fragment_shipment.setLocationData(favourite_location.getPlace_id(),favourite_location.getName(), favourite_location.getStreet() + " " + favourite_location.getAddress(), favourite_location.getLat(), favourite_location.getLng(), "pickup_location");
+                                fragment_shipment.setLocationData(favourite_location.getPlace_id(), favourite_location.getName(), favourite_location.getStreet() + " " + favourite_location.getAddress(), favourite_location.getLat(), favourite_location.getLng(), "pickup_location");
                                 fragmentManager.popBackStack("fragment_map", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                 fragment_count -= 1;
                             }
@@ -1149,7 +1145,7 @@ fragment_client_orders.getOrders();                             }
                         .postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                fragment_shipment.setLocationData(favourite_location.getPlace_id(),favourite_location.getName(), favourite_location.getStreet() + " " + favourite_location.getAddress(), favourite_location.getLat(), favourite_location.getLng(), "dropoff_location");
+                                fragment_shipment.setLocationData(favourite_location.getPlace_id(), favourite_location.getName(), favourite_location.getStreet() + " " + favourite_location.getAddress(), favourite_location.getLat(), favourite_location.getLng(), "dropoff_location");
                                 fragmentManager.popBackStack("fragment_map", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                 fragment_count -= 1;
                             }
@@ -1376,7 +1372,7 @@ fragment_client_orders.getOrders();                             }
         if (fragment_client_profile != null && fragment_client_profile.isAdded()) {
             fragment_client_profile.updateUserData(userModel);
         }
-        if(fragment_reserve_order!=null){
+        if (fragment_reserve_order != null) {
             fragment_reserve_order.updateUserData(userModel);
         }
     }
@@ -1385,7 +1381,7 @@ fragment_client_orders.getOrders();                             }
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("data", chatUserModel);
         intent.putExtra("from", from);
-        startActivityForResult(intent,200);
+        startActivityForResult(intent, 200);
     }
 
     public void delegateAcceptOrder(String driver_id, String client_id, String order_id, String driver_offer) {
@@ -1783,7 +1779,7 @@ fragment_client_orders.getOrders();                             }
 
 
         Api.getService(Tags.base_url)
-                .registerDelegate(user_id_part, national_id_part, address_part,bank_part, image_national_id_part, image_license_part, image_front_part, image_back_part)
+                .registerDelegate(user_id_part, national_id_part, address_part, bank_part, image_national_id_part, image_license_part, image_front_part, image_back_part)
                 .enqueue(new Callback<UserModel>() {
                     @Override
                     public void onResponse(Call<UserModel> call, final Response<UserModel> response) {
@@ -1796,16 +1792,22 @@ fragment_client_orders.getOrders();                             }
                                         fragment_client_profile.updateUserData(response.body());
                                         ClientHomeActivity.this.userModel = response.body();
                                         userSingleTone.setUserModel(response.body());
-                                        ClientHomeActivity.super.onBackPressed();
-                                        fragment_count -= 1;
-                                        new Handler()
-                                                .postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        Common.CreateSuccessDialog(ClientHomeActivity.this, getString(R.string.succ_be_courier));
+//                                    /    ClientHomeActivity.super.onBackPressed();
+//                                        fragment_count -= 1;
 
-                                                    }
-                                                }, 1000);
+//                                        new Handler()
+//                                                .postDelayed(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        Common.CreateSuccessDialog(ClientHomeActivity.this, getString(R.string.succ_be_courier));
+//
+//                                                    }
+//                                                }, 1000);
+                                        Toast.makeText(ClientHomeActivity.this, getResources().getString(R.string.succ_be_courier), Toast.LENGTH_LONG).show();
+                                        Intent intent = new Intent(ClientHomeActivity.this, ClientHomeActivity.class);
+                                        startActivity(intent);
+                                        finish();
+
                                     }
                                 }
                             }, 1);
@@ -2203,6 +2205,7 @@ fragment_client_orders.getOrders();                             }
         }
 
     }
+
     public void NavigateToAboutActivity(int type) {
         Intent intent = new Intent(this, AboutActivity.class);
         intent.putExtra("type", type);
@@ -2216,6 +2219,7 @@ fragment_client_orders.getOrders();                             }
         }
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2233,11 +2237,12 @@ fragment_client_orders.getOrders();                             }
                 //create dialog to open_gps
             }
         }
-        if(resultCode== Activity.RESULT_OK){
-if(fragment_client_orders!=null&&fragment_client_orders.isAdded()){
-    fragment_client_orders.getOrders();}
+        if (resultCode == Activity.RESULT_OK) {
+            if (fragment_client_orders != null && fragment_client_orders.isAdded()) {
+                fragment_client_orders.getOrders();
+            }
 
-}
+        }
 
         /*if (requestCode == 33) {
             if (isGpsOpen()) {
@@ -2421,7 +2426,7 @@ if(fragment_client_orders!=null&&fragment_client_orders.isAdded()){
                         public void run() {
                             if (canUpdateLocation) {
                                 canUpdateLocation = false;
-                                fragment_client_store.getNearbyPlaces(location, "restaurant",0);
+                                fragment_client_store.getNearbyPlaces(location, "restaurant", 0);
 
                             }
                             /*if (intentService!=null)
@@ -2557,13 +2562,14 @@ if(fragment_client_orders!=null&&fragment_client_orders.isAdded()){
     }
 
     public void apply() {
-        if(fragment_client_profile!=null&&fragment_client_profile.isAdded()){
-fragment_client_profile.pay();
+        if (fragment_client_profile != null && fragment_client_profile.isAdded()) {
+            fragment_client_profile.pay();
         }
 
     }
-    public void cDeleteOrder(){
-        if(fragment_client_orders!=null){
+
+    public void cDeleteOrder() {
+        if (fragment_client_orders != null) {
             Back();
             fragment_client_orders.getOrders();
 

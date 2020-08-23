@@ -407,7 +407,9 @@ public class Fragment_Client_Profile extends Fragment {
                 cons_pay.setVisibility(View.GONE);
             } else {
                 cons_register_delegate.setVisibility(View.GONE);
-
+                cons_balance.setVisibility(View.VISIBLE);
+//                ll_certification.setVisibility(View.GONE);
+                cons_pay.setVisibility(View.VISIBLE);
 //                if (userModel.getData().getNum_orders() > 0) {
 //                    tv_certified.setText(getString(R.string.certified_account));
 //                    img_certified.setImageResource(R.drawable.checked_certified);
@@ -535,7 +537,7 @@ public class Fragment_Client_Profile extends Fragment {
                                 try {
                                     dialog.dismiss();
                                     if (t.getMessage() != null) {
-                                        Log.e("error", t.getMessage());
+                                        Log.e("error", t.getMessage()+t.getCause().toString());
                                         if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
                                             Toast.makeText(activity, R.string.something, Toast.LENGTH_SHORT).show();
                                         } else {
