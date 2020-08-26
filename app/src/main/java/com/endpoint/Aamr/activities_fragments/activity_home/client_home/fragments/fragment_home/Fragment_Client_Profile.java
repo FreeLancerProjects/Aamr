@@ -258,6 +258,7 @@ public class Fragment_Client_Profile extends Fragment {
                         Intent telegramIntent = new Intent(Intent.ACTION_VIEW);
                         telegramIntent.setData(Uri.parse("http://telegram.me/" + telegram));
                         startActivity(telegramIntent);
+
                     } else {
                         CreateContactusDialog();
                     }
