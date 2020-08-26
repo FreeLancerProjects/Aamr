@@ -254,7 +254,7 @@ public class Fragment_Client_Profile extends Fragment {
                 startActivity(intent);*/
 
                 try {
-                    if (userModel != null && userModel.getData().getUser_type() == Tags.TYPE_DELEGATE) {
+                    if (userModel != null && userModel.getData().getUser_type().equals(Tags.TYPE_DELEGATE)) {
                         Intent telegramIntent = new Intent(Intent.ACTION_VIEW);
                         telegramIntent.setData(Uri.parse("http://telegram.me/" + telegram));
                         startActivity(telegramIntent);
