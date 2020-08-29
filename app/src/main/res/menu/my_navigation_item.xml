@@ -2,7 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/store"
         android:title="@string/stores"
-        
         android:icon="@drawable/ic_nav_store"
         />
     <item android:id="@+id/order"
@@ -11,12 +10,10 @@
     <item android:id="@+id/naoti"
         android:title="@string/notifications"
         android:icon="@drawable/ic_nav_notification"
-
         />
     <item android:id="@+id/blog"
         android:title="@string/blog"
         android:icon="@drawable/ic_box"
-
         />
     <item android:id="@+id/profile"
         android:title=""

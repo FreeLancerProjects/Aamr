@@ -37,8 +37,8 @@ public class Fragment_blog extends Fragment {
 
     private ClientHomeActivity activity;
     private ImageView arrow_back;
-    private CardView imgFacebook,imgTwitter,imgEmail,imgWhats,imgSnapchat,imgInstgram;
-    private String current_language,facebook,telegram,twitter,instegram,snapchat,whats,email;
+    private CardView imgFacebook, imgTwitter, imgEmail, imgWhats, imgSnapchat, imgInstgram;
+    private String current_language, facebook, telegram, twitter, instegram, snapchat, whats, email;
     private ConstraintLayout cons_back;
     private UserSingleTone userSingleTone;
 
@@ -107,16 +107,21 @@ public class Fragment_blog extends Fragment {
                 }
             }
         });
+        Log.e("ssssssssssss", snapchat+"");
+        Log.e("ssssssssssss", twitter+"");
 
         imgSnapchat.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+                Log.e("ssssssssssss", snapchat+"");
+
                 try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://snapchat.com/add/" + snapchat));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(snapchat));
                     intent.setPackage("com.snapchat.android");
                     startActivity(intent);
                 } catch (Exception e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://snapchat.com/add/" + snapchat)));
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse( snapchat)));
                 }
             }
         });
@@ -124,12 +129,11 @@ public class Fragment_blog extends Fragment {
         imgTwitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (twitter!=null){
-Log.e("ktkktkk",twitter);
+                if (twitter != null) {
+                    Log.e("ktkktkk", twitter);
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(twitter));
                     startActivity(intent);
-                }else
-                {
+                } else {
                     Toast.makeText(getContext(), R.string.not_av, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -137,12 +141,11 @@ Log.e("ktkktkk",twitter);
         imgFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (facebook!=null){
+                if (facebook != null) {
 
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebook));
                     startActivity(intent);
-                }else
-                {
+                } else {
                     Toast.makeText(getContext(), R.string.not_av, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -150,12 +153,11 @@ Log.e("ktkktkk",twitter);
         imgInstgram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (instegram!=null){
+                if (instegram != null) {
 
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(instegram));
                     startActivity(intent);
-                }else
-                {
+                } else {
                     Toast.makeText(getContext(), R.string.not_av, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -163,20 +165,20 @@ Log.e("ktkktkk",twitter);
         imgWhats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (whats!=null){
+                if (whats != null) {
 
-                     whats = whats.replace("(","").replace(")","").replaceAll("_","");
+                    whats = whats.replace("(", "").replace(")", "").replaceAll("_", "");
 
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone="+whats));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=" + whats));
                     startActivity(intent);
-                }else
-                {
+                } else {
                     Toast.makeText(getContext(), R.string.not_av, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
+
     private void getSocialMedia() {
 
         final ProgressDialog dialog = Common.createProgressDialog(activity, getString(R.string.wait));
@@ -195,7 +197,7 @@ Log.e("ktkktkk",twitter);
                             telegram = response.body().getCompany_telegram();
                             snapchat = response.body().getCompany_snapchat();
                             whats = response.body().getCompany_whatsapp();
-                            email=response.body().getCompany_website();
+                            email = response.body().getCompany_website();
 
 
                         } else {

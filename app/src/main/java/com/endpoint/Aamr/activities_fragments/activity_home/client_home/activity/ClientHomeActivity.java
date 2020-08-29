@@ -1042,7 +1042,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
                 } else {
                     fragment_count += 1;
 
-                    fragment_reserve_order = Fragment_Reserve_Order.newInstance(placeModel, placeDetails,cat);
+                    fragment_reserve_order = Fragment_Reserve_Order.newInstance(placeModel, placeDetails, cat);
 
                     if (fragment_reserve_order.isAdded()) {
                         fragmentManager.beginTransaction().show(fragment_reserve_order).commit();
@@ -1102,7 +1102,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
         fragment_count += 1;
 
 
-        fragment_store_details = Fragment_Store_Details.newInstance(placeModel, location.getLatitude(), location.getLongitude(),i);
+        fragment_store_details = Fragment_Store_Details.newInstance(placeModel, location.getLatitude(), location.getLongitude(), i);
 
         if (fragment_store_details.isAdded()) {
             fragmentManager.beginTransaction().show(fragment_store_details).commit();
@@ -1804,7 +1804,7 @@ public class ClientHomeActivity extends AppCompatActivity implements GoogleApiCl
 //                                                    }
 //                                                }, 1000);
                                         Toast.makeText(ClientHomeActivity.this, getResources().getString(R.string.succ_be_courier), Toast.LENGTH_LONG).show();
-                                        Intent intent =getIntent();
+                                        Intent intent = getIntent();
                                         finish();
 
                                         startActivity(intent);
